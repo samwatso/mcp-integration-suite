@@ -5,7 +5,7 @@ import { registerPackageDiscoverHandler } from "./discover/packages";
 import { registerIflowExampleHandler } from "./iflow/exmaples";
 import { registerMessageHandlers } from "./messages";
 import { McpServerWithMiddleware } from "../utils/middleware";
-import { logError, logInfo } from "..";
+import { logInfo } from "../serverUtils";
 import { registerMappingsHandler } from "./mappings";
 import { registerMappingsExampleHandler } from "./mappings/examples";
 import { registerDocsHandlers } from "./docs";

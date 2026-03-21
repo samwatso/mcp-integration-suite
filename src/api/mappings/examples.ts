@@ -1,5 +1,5 @@
 import path from "path";
-import { projPath } from "../..";
+import { projPath } from "../../serverUtils";
 
 const resourceBasePath = path.resolve(projPath, "./resources/examples/mappings/");
 

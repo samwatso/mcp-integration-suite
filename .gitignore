@@ -1,7 +1,6 @@
 .env
 dist
 node_modules
-package-lock.json
 .DS_STORE
 serverlog.txt
 debug.log

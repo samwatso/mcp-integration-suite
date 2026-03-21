@@ -1,14 +1,15 @@
-// First call so the imports can use the variable
-import path from "path";
-export const projPath = path.resolve(__dirname, "..");
+// projPath, logError, logInfo exported from serverUtils to avoid circular deps with server.ts
+export { projPath, logError, logInfo } from "./serverUtils";
+import { projPath, logError, logInfo } from "./serverUtils";
 
+import path from "path";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { registerAllHandlers } from "./handlers";
 import { config } from "dotenv";
 
 import { exit } from "process";
-import "./utils/logging"; // Removed .js again
-import { writeToErrLog, writeToLog } from "./utils/logging"; // Removed .js again
+import "./utils/logging";
+import { writeToLog } from "./utils/logging";
 import { McpServerWithMiddleware } from "./utils/middleware";
 import './utils/exitHandler';
 import { registerDeleteTempOnExit } from "./utils/exitHandler";
@@ -39,20 +40,6 @@ async function main() {
 	await server.connect(transport);
 }
 
-export const logError = (msg: any): void => {
-	writeToErrLog(msg);
-	try {
-		// just causes lots of error messages on most client because it is not implemented
-		//server.server.sendLoggingMessage({level: "error", data: JSON.stringify(msg)});
-	} catch { }
-};
-
-export const logInfo = (msg: any): void => {
-	writeToLog(msg);
-	try {
-		//server.server.sendLoggingMessage({level: "info", data: JSON.stringify(msg)});
-	} catch { }
-};
 
 if (!process.env.JEST_WORKER_ID) {
 	main()

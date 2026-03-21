@@ -1,4 +1,4 @@
-import { logError, logInfo } from "../..";
+import { logError, logInfo } from "../../serverUtils";
 import {
 	createMessageMapping,
 	deployMapping,
