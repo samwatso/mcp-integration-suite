@@ -1,0 +1,64 @@
+  <!-- === Sashay Script Library: Externalized Parameters === -->
+  <parameter>
+    <key/>
+    <name>EnablePayloadLogging</name>
+    <type>xsd:string</type>
+    <isRequired>false</isRequired>
+    <constraint/>
+    <description>Enable payload logging at script checkpoints (true/false). Default: false.</description>
+    <additionalMetadata/>
+  </parameter>
+  <parameter>
+    <key/>
+    <name>LogHeaders</name>
+    <type>xsd:string</type>
+    <isRequired>false</isRequired>
+    <constraint/>
+    <description>Include headers and properties in payload log attachments (true/false). Default: false.</description>
+    <additionalMetadata/>
+  </parameter>
+  <parameter>
+    <key/>
+    <name>EnableReplaySnapshot</name>
+    <type>xsd:string</type>
+    <isRequired>false</isRequired>
+    <constraint/>
+    <description>Capture full message context at entry for replay support (true/false). Default: false.</description>
+    <additionalMetadata/>
+  </parameter>
+  <parameter>
+    <key/>
+    <name>EnableSizeGuard</name>
+    <type>xsd:string</type>
+    <isRequired>false</isRequired>
+    <constraint/>
+    <description>Reject oversized payloads at entry (true/false). Default: true.</description>
+    <additionalMetadata/>
+  </parameter>
+  <parameter>
+    <key/>
+    <name>MaxPayloadSizeMB</name>
+    <type>xsd:integer</type>
+    <isRequired>false</isRequired>
+    <constraint/>
+    <description>Maximum allowed payload size in MB. Default: 10.</description>
+    <additionalMetadata/>
+  </parameter>
+  <parameter>
+    <key/>
+    <name>TargetFilenamePattern</name>
+    <type>xsd:string</type>
+    <isRequired>false</isRequired>
+    <constraint/>
+    <description>Dynamic filename pattern for file/SFTP. Placeholders: {date}, {time}, {datetime}, {timestamp}, {msgid}, {sender}, {receiver}, {guid}, {iflow}.</description>
+    <additionalMetadata/>
+  </parameter>
+  <parameter>
+    <key/>
+    <name>TargetDirectoryPattern</name>
+    <type>xsd:string</type>
+    <isRequired>false</isRequired>
+    <constraint/>
+    <description>Dynamic directory pattern for file/SFTP. Same placeholders as TargetFilenamePattern.</description>
+    <additionalMetadata/>
+  </parameter>

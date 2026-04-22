@@ -1,0 +1,35 @@
+    {# === Standard CPI Monitoring Headers (SAP_ApplicationID, SAP_Sender, SAP_Receiver, Correlation ID) === #}
+    <bpmn2:callActivity id="ServiceTask_StandardHeaders" name="Set Standard Headers">
+      <bpmn2:extensionElements>
+        <ifl:property>
+          <key>wrapContent</key>
+          <value/>
+        </ifl:property>
+        <ifl:property>
+          <key>activityType</key>
+          <value>ContentModifier</value>
+        </ifl:property>
+        <ifl:property>
+          <key>cmdVariantUri</key>
+          <value>ctype::FlowstepVariant/cname::ContentModifier/version::{{ flowstep_versions.ContentModifier }}</value>
+        </ifl:property>
+        <ifl:property>
+          <key>headerTable</key>
+          <value>action:create:Name:SAP_ApplicationID:Type:constant:Value:{{ iflow_id }}:Datatype::Default:|action:create:Name:SAP_Sender:Type:constant:Value:{{ sender_system | default('SenderSystem', true) }}:Datatype::Default:|action:create:Name:SAP_Receiver:Type:constant:Value:{{ receiver_system | default('ReceiverSystem', true) }}:Datatype::Default:|action:create:Name:SAP_MessageProcessingLogID:Type:expression:Value:${header.SAP_MessageProcessingLogID}:Datatype::Default:</value>
+        </ifl:property>
+        <ifl:property>
+          <key>propertyTable</key>
+          <value/>
+        </ifl:property>
+        <ifl:property>
+          <key>bodyType</key>
+          <value/>
+        </ifl:property>
+        <ifl:property>
+          <key>body</key>
+          <value/>
+        </ifl:property>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>{{ standard_headers_incoming }}</bpmn2:incoming>
+      <bpmn2:outgoing>{{ standard_headers_outgoing }}</bpmn2:outgoing>
+    </bpmn2:callActivity>

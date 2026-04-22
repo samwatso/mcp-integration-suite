@@ -1,0 +1,416 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn2:definitions xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL"
+    xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+    xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+    xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+    xmlns:ifl="http:///com.sap.ifl.model/Ifl.xsd"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    id="Definitions_1"
+    targetNamespace="http://www.sap.com/sashay">
+
+  <bpmn2:collaboration id="{{ iflow_id }}" name="{{ iflow_name }}">
+    <bpmn2:extensionElements>
+      <ifl:property>
+        <key>namespaceMapping</key>
+        <value>xmlns:ns={{ namespace }}</value>
+      </ifl:property>
+      <ifl:property>
+        <key>description</key>
+        <value>{{ description | default('Async IDoc to SFTP transfer', true) }}</value>
+      </ifl:property>
+      <ifl:property>
+        <key>componentVersion</key>
+        <value>1.2</value>
+      </ifl:property>
+    </bpmn2:extensionElements>
+
+    <!-- IDoc Sender -->
+    <bpmn2:participant id="Participant_Sender" name="{{ sender_system | default('SAPSystem', true) }}"
+        ifl:type="EndpointSender">
+      <bpmn2:extensionElements>
+        <ifl:property>
+          <key>ComponentType</key>
+          <value>IDoc</value>
+        </ifl:property>
+        <ifl:property>
+          <key>TransportProtocol</key>
+          <value>HTTPS</value>
+        </ifl:property>
+        <ifl:property>
+          <key>MessageProtocol</key>
+          <value>IDoc</value>
+        </ifl:property>
+        <ifl:property>
+          <key>isSender</key>
+          <value>true</value>
+        </ifl:property>
+      </bpmn2:extensionElements>
+    </bpmn2:participant>
+
+    <bpmn2:participant id="Participant_Process" name="{{ iflow_name }}"
+        ifl:type="IntegrationProcess"
+        processRef="Process_1" />
+
+    <!-- SFTP Receiver -->
+    <bpmn2:participant id="Participant_Receiver" name="{{ receiver_system | default('SFTPReceiver', true) }}"
+        ifl:type="EndpointRecevier">
+      <bpmn2:extensionElements>
+        <ifl:property>
+          <key>ComponentType</key>
+          <value>SFTP</value>
+        </ifl:property>
+        <ifl:property>
+          <key>TransportProtocol</key>
+          <value>SFTP</value>
+        </ifl:property>
+        <ifl:property>
+          <key>MessageProtocol</key>
+          <value>File</value>
+        </ifl:property>
+        <ifl:property>
+          <key>isSender</key>
+          <value>false</value>
+        </ifl:property>
+      </bpmn2:extensionElements>
+    </bpmn2:participant>
+
+    <!-- IDoc sender channel -->
+    <bpmn2:messageFlow id="Flow_SenderToProcess" name="IDoc Receive"
+        sourceRef="Participant_Sender" targetRef="StartEvent_1">
+      <bpmn2:extensionElements>
+        <ifl:property>
+          <key>ComponentType</key>
+          <value>IDoc</value>
+        </ifl:property>
+        <ifl:property>
+          <key>cmdVariantUri</key>
+          <value>ctype::AdapterVariant/cname::sap:IDOC/tp::HTTPS/mp::IDoc/direction::Sender/version::{{ adapter_versions.IDOC }}</value>
+        </ifl:property>
+        <ifl:property>
+          <key>direction</key>
+          <value>Sender</value>
+        </ifl:property>
+        <ifl:property>
+          <key>address</key>
+          <value>{% raw %}{{IDoc_Sender_Address}}{% endraw %}</value>
+        </ifl:property>
+      </bpmn2:extensionElements>
+    </bpmn2:messageFlow>
+
+    <!-- SFTP receiver channel -->
+    <bpmn2:messageFlow id="Flow_ProcessToReceiver" name="SFTP Write"
+        sourceRef="EndEvent_1" targetRef="Participant_Receiver">
+      <bpmn2:extensionElements>
+        <ifl:property>
+          <key>ComponentType</key>
+          <value>SFTP</value>
+        </ifl:property>
+        <ifl:property>
+          <key>cmdVariantUri</key>
+          <value>ctype::AdapterVariant/cname::sap:SFTP/tp::SFTP/mp::File/direction::Receiver/version::{{ adapter_versions.SFTP }}</value>
+        </ifl:property>
+        <ifl:property>
+          <key>direction</key>
+          <value>Receiver</value>
+        </ifl:property>
+        <ifl:property>
+          <key>host</key>
+          <value>{% raw %}{{SFTP_Receiver_Host}}{% endraw %}</value>
+        </ifl:property>
+        <ifl:property>
+          <key>path</key>
+          <value>{% raw %}{{SFTP_Receiver_Path}}{% endraw %}</value>
+        </ifl:property>
+        <ifl:property>
+          <key>fileName</key>
+          <value>{% raw %}{{SFTP_Receiver_FileName}}{% endraw %}</value>
+        </ifl:property>
+        <ifl:property>
+          <key>tokenCredential</key>
+          <value>{% raw %}{{SFTP_Receiver_CredentialName}}{% endraw %}</value>
+        </ifl:property>
+        <ifl:property>
+          <key>authentication</key>
+          <value>{% raw %}{{SFTP_Receiver_Authentication}}{% endraw %}</value>
+        </ifl:property>
+        <ifl:property>
+          <key>proxyType</key>
+          <value>{% raw %}{{SFTP_Receiver_ProxyType}}{% endraw %}</value>
+        </ifl:property>
+        <ifl:property>
+          <key>timeout</key>
+          <value>{% raw %}{{SFTP_Receiver_Timeout}}{% endraw %}</value>
+        </ifl:property>
+      </bpmn2:extensionElements>
+    </bpmn2:messageFlow>
+
+    {% if error_handling_enabled %}
+    {% include "error_participants.j2" %}
+    {% include "error_message_flows.j2" %}
+    {% endif %}
+  </bpmn2:collaboration>
+
+  {# ================================================================
+     Integration Process
+     Clean 5-step: Start → Headers → [SizeGuard → ReplaySnapshot] →
+                   [LogBefore] → [Mapping] → [LogAfter] → DynEndpoint → End
+     ================================================================ #}
+  <bpmn2:process id="Process_1" name="{{ iflow_name }}" isExecutable="true">
+    <bpmn2:startEvent id="StartEvent_1" name="IDoc Receive">
+      <bpmn2:outgoing>SequenceFlow_StartToHeaders</bpmn2:outgoing>
+      <bpmn2:messageEventDefinition/>
+    </bpmn2:startEvent>
+
+    {% if entry_scripts_enabled %}
+    {% set standard_headers_outgoing = 'SequenceFlow_StartToSizeGuard' %}
+    {% else %}
+    {% set standard_headers_outgoing = 'SequenceFlow_1' %}
+    {% endif %}
+    {% set standard_headers_incoming = 'SequenceFlow_StartToHeaders' %}
+    {% include "standard_headers.j2" %}
+
+    {# --- Entry-point scripts (conditional) --- #}
+    {% if entry_scripts_enabled %}
+    {% set entry_scripts_source = 'ServiceTask_StandardHeaders' %}
+    {% include "entry_scripts.j2" %}
+    {% endif %}
+
+    {% if logging_enabled %}
+    <!-- Groovy: Log payload before mapping -->
+    <bpmn2:callActivity id="CallActivity_LogBefore" name="Log Payload Before">
+      <bpmn2:extensionElements>
+        <ifl:property>
+          <key>activityType</key>
+          <value>Script</value>
+        </ifl:property>
+        <ifl:property>
+          <key>scriptBundleId</key>
+          <value>PayloadLogBefore</value>
+        </ifl:property>
+        <ifl:property>
+          <key>scriptFunction</key>
+          <value>processData</value>
+        </ifl:property>
+        <ifl:property>
+          <key>scriptType</key>
+          <value>groovy</value>
+        </ifl:property>
+        <ifl:property>
+          <key>cmdVariantUri</key>
+          <value>ctype::FlowstepVariant/cname::GroovyScript/version::1.0.1</value>
+        </ifl:property>
+      </bpmn2:extensionElements>
+      {% if entry_scripts_enabled %}
+      <bpmn2:incoming>SequenceFlow_ReplayOut</bpmn2:incoming>
+      {% else %}
+      <bpmn2:incoming>SequenceFlow_1</bpmn2:incoming>
+      {% endif %}
+      <bpmn2:outgoing>SequenceFlow_LogBeforeOut</bpmn2:outgoing>
+    </bpmn2:callActivity>
+    {% endif %}
+
+    {% if mapping_strategy == 'port' or mapping_strategy == 'rebuild' %}
+    <bpmn2:callActivity id="CallActivity_Mapping" name="Mapping: {{ mapping_reference | default('TODO', true) }}">
+      {% if logging_enabled %}
+      <bpmn2:incoming>SequenceFlow_LogBeforeOut</bpmn2:incoming>
+      {% elif entry_scripts_enabled %}
+      <bpmn2:incoming>SequenceFlow_ReplayOut</bpmn2:incoming>
+      {% else %}
+      <bpmn2:incoming>SequenceFlow_1</bpmn2:incoming>
+      {% endif %}
+      {% if logging_enabled %}
+      <bpmn2:outgoing>SequenceFlow_MappingToLogAfter</bpmn2:outgoing>
+      {% else %}
+      <bpmn2:outgoing>SequenceFlow_MappingToDynEndpoint</bpmn2:outgoing>
+      {% endif %}
+      <bpmn2:extensionElements>
+        <ifl:property>
+          <key>activityType</key>
+          <value>Mapping</value>
+        </ifl:property>
+        <ifl:property>
+          <key>mappingname</key>
+          <value>{{ mapping_reference | default('TODO_mapping', true) }}</value>
+        </ifl:property>
+        <ifl:property>
+          <key>mappingType</key>
+          <value>{{ mapping_type | default('MessageMapping', true) }}</value>
+        </ifl:property>
+      </bpmn2:extensionElements>
+    </bpmn2:callActivity>
+    {% endif %}
+
+    {% if logging_enabled %}
+    <!-- Groovy: Log payload after mapping -->
+    <bpmn2:callActivity id="CallActivity_LogAfter" name="Log Payload After">
+      <bpmn2:extensionElements>
+        <ifl:property>
+          <key>activityType</key>
+          <value>Script</value>
+        </ifl:property>
+        <ifl:property>
+          <key>scriptBundleId</key>
+          <value>PayloadLogAfter</value>
+        </ifl:property>
+        <ifl:property>
+          <key>scriptFunction</key>
+          <value>processData</value>
+        </ifl:property>
+        <ifl:property>
+          <key>scriptType</key>
+          <value>groovy</value>
+        </ifl:property>
+        <ifl:property>
+          <key>cmdVariantUri</key>
+          <value>ctype::FlowstepVariant/cname::GroovyScript/version::1.0.1</value>
+        </ifl:property>
+      </bpmn2:extensionElements>
+      {% if mapping_strategy == 'port' or mapping_strategy == 'rebuild' %}
+      <bpmn2:incoming>SequenceFlow_MappingToLogAfter</bpmn2:incoming>
+      {% else %}
+      <bpmn2:incoming>SequenceFlow_LogBeforeOut</bpmn2:incoming>
+      {% endif %}
+      <bpmn2:outgoing>SequenceFlow_LogAfterToDynEndpoint</bpmn2:outgoing>
+    </bpmn2:callActivity>
+    {% endif %}
+
+    <!-- Groovy: Dynamic filename/directory for SFTP -->
+    <bpmn2:callActivity id="CallActivity_DynEndpoint" name="Dynamic Endpoint">
+      <bpmn2:extensionElements>
+        <ifl:property>
+          <key>activityType</key>
+          <value>Script</value>
+        </ifl:property>
+        <ifl:property>
+          <key>scriptBundleId</key>
+          <value>DynamicEndpoint</value>
+        </ifl:property>
+        <ifl:property>
+          <key>scriptFunction</key>
+          <value>processData</value>
+        </ifl:property>
+        <ifl:property>
+          <key>scriptType</key>
+          <value>groovy</value>
+        </ifl:property>
+        <ifl:property>
+          <key>cmdVariantUri</key>
+          <value>ctype::FlowstepVariant/cname::GroovyScript/version::1.0.1</value>
+        </ifl:property>
+      </bpmn2:extensionElements>
+      {% if logging_enabled %}
+      <bpmn2:incoming>SequenceFlow_LogAfterToDynEndpoint</bpmn2:incoming>
+      {% elif mapping_strategy == 'port' or mapping_strategy == 'rebuild' %}
+      <bpmn2:incoming>SequenceFlow_MappingToDynEndpoint</bpmn2:incoming>
+      {% elif entry_scripts_enabled %}
+      <bpmn2:incoming>SequenceFlow_ReplayOut</bpmn2:incoming>
+      {% else %}
+      <bpmn2:incoming>SequenceFlow_1</bpmn2:incoming>
+      {% endif %}
+      <bpmn2:outgoing>SequenceFlow_DynEndpointToEnd</bpmn2:outgoing>
+    </bpmn2:callActivity>
+
+    <bpmn2:endEvent id="EndEvent_1" name="End">
+      <bpmn2:incoming>SequenceFlow_DynEndpointToEnd</bpmn2:incoming>
+      <bpmn2:messageEventDefinition/>
+    </bpmn2:endEvent>
+
+    {# === Sequence Flows === #}
+    <bpmn2:sequenceFlow id="SequenceFlow_StartToHeaders" sourceRef="StartEvent_1" targetRef="ServiceTask_StandardHeaders"/>
+
+    {% if entry_scripts_enabled %}
+    {# Headers → SizeGuard (entry_scripts.j2 chains SizeGuard → ReplaySnapshot) #}
+    <bpmn2:sequenceFlow id="SequenceFlow_StartToSizeGuard" sourceRef="ServiceTask_StandardHeaders" targetRef="CallActivity_SizeGuard"/>
+      {% if logging_enabled %}
+    <bpmn2:sequenceFlow id="SequenceFlow_ReplayOut" sourceRef="CallActivity_ReplaySnapshot" targetRef="CallActivity_LogBefore"/>
+      {% elif mapping_strategy == 'port' or mapping_strategy == 'rebuild' %}
+    <bpmn2:sequenceFlow id="SequenceFlow_ReplayOut" sourceRef="CallActivity_ReplaySnapshot" targetRef="CallActivity_Mapping"/>
+      {% else %}
+    <bpmn2:sequenceFlow id="SequenceFlow_ReplayOut" sourceRef="CallActivity_ReplaySnapshot" targetRef="CallActivity_DynEndpoint"/>
+      {% endif %}
+    {% endif %}
+
+    {% if logging_enabled and (mapping_strategy == 'port' or mapping_strategy == 'rebuild') %}
+    {# [Headers/ReplayOut] → LogBefore → Mapping → LogAfter → DynEndpoint → End #}
+    {% if not entry_scripts_enabled %}
+    <bpmn2:sequenceFlow id="SequenceFlow_1" sourceRef="ServiceTask_StandardHeaders" targetRef="CallActivity_LogBefore"/>
+    {% endif %}
+    <bpmn2:sequenceFlow id="SequenceFlow_LogBeforeOut" sourceRef="CallActivity_LogBefore" targetRef="CallActivity_Mapping"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_MappingToLogAfter" sourceRef="CallActivity_Mapping" targetRef="CallActivity_LogAfter"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_LogAfterToDynEndpoint" sourceRef="CallActivity_LogAfter" targetRef="CallActivity_DynEndpoint"/>
+    {% elif logging_enabled %}
+    {# [Headers/ReplayOut] → LogBefore → LogAfter → DynEndpoint → End #}
+    {% if not entry_scripts_enabled %}
+    <bpmn2:sequenceFlow id="SequenceFlow_1" sourceRef="ServiceTask_StandardHeaders" targetRef="CallActivity_LogBefore"/>
+    {% endif %}
+    <bpmn2:sequenceFlow id="SequenceFlow_LogBeforeOut" sourceRef="CallActivity_LogBefore" targetRef="CallActivity_LogAfter"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_LogAfterToDynEndpoint" sourceRef="CallActivity_LogAfter" targetRef="CallActivity_DynEndpoint"/>
+    {% elif mapping_strategy == 'port' or mapping_strategy == 'rebuild' %}
+    {# [Headers/ReplayOut] → Mapping → DynEndpoint → End #}
+    {% if not entry_scripts_enabled %}
+    <bpmn2:sequenceFlow id="SequenceFlow_1" sourceRef="ServiceTask_StandardHeaders" targetRef="CallActivity_Mapping"/>
+    {% endif %}
+    <bpmn2:sequenceFlow id="SequenceFlow_MappingToDynEndpoint" sourceRef="CallActivity_Mapping" targetRef="CallActivity_DynEndpoint"/>
+    {% else %}
+    {# [Headers/ReplayOut] → DynEndpoint → End #}
+    {% if not entry_scripts_enabled %}
+    <bpmn2:sequenceFlow id="SequenceFlow_1" sourceRef="ServiceTask_StandardHeaders" targetRef="CallActivity_DynEndpoint"/>
+    {% endif %}
+    {% endif %}
+
+    <bpmn2:sequenceFlow id="SequenceFlow_DynEndpointToEnd" sourceRef="CallActivity_DynEndpoint" targetRef="EndEvent_1"/>
+
+    {% if error_handling_enabled %}
+    {% include "error_subprocess.j2" %}
+    {% endif %}
+  </bpmn2:process>
+
+  {% if error_handling_enabled %}
+  {% include "error_local_process.j2" %}
+  {% endif %}
+
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1" name="Diagram">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="{{ iflow_id }}">
+      <bpmndi:BPMNShape id="Participant_Sender_gui" bpmnElement="Participant_Sender">
+        <dc:Bounds height="140" width="120" x="30" y="30" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Participant_Process_gui" bpmnElement="Participant_Process" isHorizontal="true">
+        <dc:Bounds height="200" width="900" x="200" y="0" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Participant_Receiver_gui" bpmnElement="Participant_Receiver">
+        <dc:Bounds height="140" width="120" x="1150" y="30" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="StartEvent_1_gui" bpmnElement="StartEvent_1">
+        <dc:Bounds height="32" width="32" x="220" y="84" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_StandardHeaders_gui" bpmnElement="ServiceTask_StandardHeaders">
+        <dc:Bounds height="60" width="100" x="270" y="70" />
+      </bpmndi:BPMNShape>
+      {% include "entry_scripts_diagram.j2" %}
+      {% if logging_enabled %}
+      <bpmndi:BPMNShape id="CallActivity_LogBefore_gui" bpmnElement="CallActivity_LogBefore">
+        <dc:Bounds height="60" width="100" x="520" y="70" />
+      </bpmndi:BPMNShape>
+      {% endif %}
+      {% if mapping_strategy == 'port' or mapping_strategy == 'rebuild' %}
+      <bpmndi:BPMNShape id="CallActivity_Mapping_gui" bpmnElement="CallActivity_Mapping">
+        <dc:Bounds height="60" width="100" x="640" y="70" />
+      </bpmndi:BPMNShape>
+      {% endif %}
+      {% if logging_enabled %}
+      <bpmndi:BPMNShape id="CallActivity_LogAfter_gui" bpmnElement="CallActivity_LogAfter">
+        <dc:Bounds height="60" width="100" x="760" y="70" />
+      </bpmndi:BPMNShape>
+      {% endif %}
+      <bpmndi:BPMNShape id="CallActivity_DynEndpoint_gui" bpmnElement="CallActivity_DynEndpoint">
+        <dc:Bounds height="60" width="100" x="880" y="70" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_1_gui" bpmnElement="EndEvent_1">
+        <dc:Bounds height="32" width="32" x="1000" y="84" />
+      </bpmndi:BPMNShape>
+      {% if error_handling_enabled %}
+      {% include "error_diagram.j2" %}
+      {% endif %}
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn2:definitions>

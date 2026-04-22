@@ -1,0 +1,16 @@
+    <!-- Error Receiver: ProcessDirect to shared alert iFlow (pd-generic-mail-alert) -->
+    <bpmn2:participant id="Participant_ErrorPD" ifl:type="EndpointRecevier"
+        name="ErrorAlertReceiver">
+      <bpmn2:extensionElements>
+        <ifl:property>
+          <key>ifl:type</key>
+          <value>EndpointRecevier</value>
+        </ifl:property>
+      </bpmn2:extensionElements>
+    </bpmn2:participant>
+
+    <!-- Exception Local Integration Process -->
+    <bpmn2:participant id="Participant_Process_Error" ifl:type="IntegrationProcess"
+        name="Exception Local Integration Process" processRef="Process_Error">
+      <bpmn2:extensionElements/>
+    </bpmn2:participant>

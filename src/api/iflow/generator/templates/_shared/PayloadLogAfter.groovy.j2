@@ -1,0 +1,11 @@
+import com.sap.gateway.ip.core.customdev.util.Message
+
+def Message processData(Message message) {
+    def messageLog = messageLogFactory.getMessageLog(message)
+    if (messageLog != null) {
+        def body = message.getBody(String)
+        messageLog.addAttachmentAsString("Payload After Mapping", body, "application/xml")
+        messageLog.setStringProperty("LogPoint", "AfterMapping")
+    }
+    return message
+}

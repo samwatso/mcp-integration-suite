@@ -1,0 +1,538 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn2:definitions xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL"
+    xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+    xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+    xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+    xmlns:ifl="http:///com.sap.ifl.model/Ifl.xsd"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    id="Definitions_1">
+
+  <!-- ============================================================ -->
+  <!-- Collaboration                                                 -->
+  <!-- ============================================================ -->
+  <bpmn2:collaboration id="Collaboration_1" name="Default Collaboration">
+    <bpmn2:extensionElements>
+      <ifl:property>
+        <key>namespaceMapping</key>
+        <value>xmlns:ns={{ namespace }}</value>
+      </ifl:property>
+      <ifl:property>
+        <key>allowedHeaderList</key>
+        <value/>
+      </ifl:property>
+      <ifl:property>
+        <key>ServerTrace</key>
+        <value/>
+      </ifl:property>
+      <ifl:property>
+        <key>returnExceptionToSender</key>
+        <value/>
+      </ifl:property>
+      <ifl:property>
+        <key>log</key>
+        <value>All events</value>
+      </ifl:property>
+      <ifl:property>
+        <key>cmdVariantUri</key>
+        <value>ctype::IFlowVariant/cname::IFlowConfiguration</value>
+      </ifl:property>
+    </bpmn2:extensionElements>
+
+    <!-- Sender Endpoint -->
+    <bpmn2:participant id="Participant_Sender" ifl:type="EndpointSender"
+        name="{{ sender_system | default('SenderSystem', true) }}">
+      <bpmn2:extensionElements>
+        <ifl:property>
+          <key>enableBasicAuthentication</key>
+          <value>false</value>
+        </ifl:property>
+        <ifl:property>
+          <key>ifl:type</key>
+          <value>EndpointSender</value>
+        </ifl:property>
+      </bpmn2:extensionElements>
+    </bpmn2:participant>
+
+    <!-- Receiver Endpoint -->
+    <bpmn2:participant id="Participant_Receiver" ifl:type="EndpointRecevier"
+        name="{{ receiver_system | default('ReceiverSystem', true) }}">
+      <bpmn2:extensionElements>
+        <ifl:property>
+          <key>ifl:type</key>
+          <value>EndpointRecevier</value>
+        </ifl:property>
+      </bpmn2:extensionElements>
+    </bpmn2:participant>
+
+    <!-- Integration Process -->
+    <bpmn2:participant id="Participant_Process_1" ifl:type="IntegrationProcess"
+        name="{{ iflow_name }}" processRef="Process_1">
+      <bpmn2:extensionElements/>
+    </bpmn2:participant>
+
+    {% if error_handling_enabled %}
+    {% include "error_participants.j2" %}
+    {% endif %}
+
+    <!-- Sender Channel -->
+    <bpmn2:messageFlow id="MessageFlow_Sender" name="{{ sender_component_type }}"
+        sourceRef="Participant_Sender" targetRef="StartEvent_1">
+      <bpmn2:extensionElements>
+        <ifl:property>
+          <key>ComponentType</key>
+          <value>{{ sender_component_type }}</value>
+        </ifl:property>
+        <ifl:property>
+          <key>Description</key>
+          <value/>
+        </ifl:property>
+        <ifl:property>
+          <key>ComponentNS</key>
+          <value>{{ sender_component_ns }}</value>
+        </ifl:property>
+        <ifl:property>
+          <key>componentVersion</key>
+          <value>{{ sender_component_version }}</value>
+        </ifl:property>
+        <ifl:property>
+          <key>Name</key>
+          <value>{{ sender_component_type }}</value>
+        </ifl:property>
+        <ifl:property>
+          <key>TransportProtocolVersion</key>
+          <value>{{ sender_version }}</value>
+        </ifl:property>
+        <ifl:property>
+          <key>ComponentSWCVName</key>
+          <value>external</value>
+        </ifl:property>
+        <ifl:property>
+          <key>system</key>
+          <value>{{ sender_system | default('SenderSystem', true) }}</value>
+        </ifl:property>
+        <ifl:property>
+          <key>TransportProtocol</key>
+          <value>{{ sender_transport_protocol }}</value>
+        </ifl:property>
+        <ifl:property>
+          <key>cmdVariantUri</key>
+          <value>{{ sender_cmd_variant_uri }}</value>
+        </ifl:property>
+        <ifl:property>
+          <key>MessageProtocol</key>
+          <value>{{ sender_message_protocol }}</value>
+        </ifl:property>
+        <ifl:property>
+          <key>MessageProtocolVersion</key>
+          <value>{{ sender_version }}</value>
+        </ifl:property>
+        <ifl:property>
+          <key>ComponentSWCVId</key>
+          <value>{{ sender_version }}</value>
+        </ifl:property>
+        <ifl:property>
+          <key>direction</key>
+          <value>Sender</value>
+        </ifl:property>
+        {% if sender_adapter_type == 'HTTPS' %}
+        <ifl:property>
+          <key>urlPath</key>
+          <value>{% raw %}{{sender_address}}{% endraw %}</value>
+        </ifl:property>
+        <ifl:property>
+          <key>senderAuthType</key>
+          <value>{% raw %}{{senderAuthType}}{% endraw %}</value>
+        </ifl:property>
+        <ifl:property>
+          <key>userRole</key>
+          <value>ESBMessaging.send</value>
+        </ifl:property>
+        <ifl:property>
+          <key>xsrfProtection</key>
+          <value>1</value>
+        </ifl:property>
+        <ifl:property>
+          <key>maximumBodySize</key>
+          <value>{% raw %}{{senderMaxBodySize}}{% endraw %}</value>
+        </ifl:property>
+        <ifl:property>
+          <key>clientCertificates</key>
+          <value/>
+        </ifl:property>
+        {% endif %}
+      </bpmn2:extensionElements>
+    </bpmn2:messageFlow>
+
+    <!-- Receiver Channel -->
+    <bpmn2:messageFlow id="MessageFlow_Receiver" name="{{ receiver_component_type }}"
+        sourceRef="EndEvent_1" targetRef="Participant_Receiver">
+      <bpmn2:extensionElements>
+        <ifl:property>
+          <key>Description</key>
+          <value/>
+        </ifl:property>
+        <ifl:property>
+          <key>ComponentNS</key>
+          <value>{{ receiver_component_ns }}</value>
+        </ifl:property>
+        <ifl:property>
+          <key>componentVersion</key>
+          <value>{{ receiver_component_version }}</value>
+        </ifl:property>
+        <ifl:property>
+          <key>Name</key>
+          <value>{{ receiver_component_type }}</value>
+        </ifl:property>
+        <ifl:property>
+          <key>TransportProtocolVersion</key>
+          <value>{{ receiver_version }}</value>
+        </ifl:property>
+        <ifl:property>
+          <key>ComponentSWCVName</key>
+          <value>external</value>
+        </ifl:property>
+        <ifl:property>
+          <key>system</key>
+          <value>{{ receiver_system | default('ReceiverSystem', true) }}</value>
+        </ifl:property>
+        <ifl:property>
+          <key>TransportProtocol</key>
+          <value>{{ receiver_transport_protocol }}</value>
+        </ifl:property>
+        <ifl:property>
+          <key>cmdVariantUri</key>
+          <value>{{ receiver_cmd_variant_uri }}</value>
+        </ifl:property>
+        <ifl:property>
+          <key>MessageProtocol</key>
+          <value>{{ receiver_message_protocol }}</value>
+        </ifl:property>
+        <ifl:property>
+          <key>MessageProtocolVersion</key>
+          <value>{{ receiver_version }}</value>
+        </ifl:property>
+        <ifl:property>
+          <key>ComponentSWCVId</key>
+          <value>{{ receiver_version }}</value>
+        </ifl:property>
+        <ifl:property>
+          <key>direction</key>
+          <value>Receiver</value>
+        </ifl:property>
+        <ifl:property>
+          <key>ComponentType</key>
+          <value>{{ receiver_component_type }}</value>
+        </ifl:property>
+        {% if receiver_adapter_type == 'HTTP' %}
+        <ifl:property>
+          <key>httpMethod</key>
+          <value>{% raw %}{{receiverMethod}}{% endraw %}</value>
+        </ifl:property>
+        <ifl:property>
+          <key>httpAddressWithoutQuery</key>
+          <value>{% raw %}{{receiverHost}}{% endraw %}</value>
+        </ifl:property>
+        <ifl:property>
+          <key>httpAddressQuery</key>
+          <value>{% raw %}{{receiverQuery}}{% endraw %}</value>
+        </ifl:property>
+        <ifl:property>
+          <key>authenticationMethod</key>
+          <value>{% raw %}{{receiverAuthMethod}}{% endraw %}</value>
+        </ifl:property>
+        <ifl:property>
+          <key>credentialName</key>
+          <value>{% raw %}{{receiverAuth}}{% endraw %}</value>
+        </ifl:property>
+        <ifl:property>
+          <key>throwExceptionOnFailure</key>
+          <value>true</value>
+        </ifl:property>
+        <ifl:property>
+          <key>proxyType</key>
+          <value>{% raw %}{{receiverProxyType}}{% endraw %}</value>
+        </ifl:property>
+        <ifl:property>
+          <key>httpRequestTimeout</key>
+          <value>{% raw %}{{receiverTimeout}}{% endraw %}</value>
+        </ifl:property>
+        {% endif %}
+      </bpmn2:extensionElements>
+    </bpmn2:messageFlow>
+
+    {% if error_handling_enabled %}
+    {% include "error_message_flows.j2" %}
+    {% endif %}
+  </bpmn2:collaboration>
+
+  <!-- ============================================================ -->
+  <!-- Main Integration Process                                      -->
+  <!-- ============================================================ -->
+  <bpmn2:process id="Process_1" name="{{ iflow_name }}">
+    <bpmn2:extensionElements>
+      <ifl:property>
+        <key>cmdVariantUri</key>
+        <value>ctype::FlowElementVariant/cname::IntegrationProcess</value>
+      </ifl:property>
+    </bpmn2:extensionElements>
+
+    {% if error_handling_enabled %}
+    {% include "error_subprocess.j2" %}
+    {% endif %}
+
+    <bpmn2:startEvent id="StartEvent_1" name="Start">
+      <bpmn2:extensionElements>
+        <ifl:property>
+          <key>cmdVariantUri</key>
+          <value>ctype::FlowstepVariant/cname::MessageStartEvent</value>
+        </ifl:property>
+      </bpmn2:extensionElements>
+      <bpmn2:outgoing>SequenceFlow_StartToHeaders</bpmn2:outgoing>
+      <bpmn2:messageEventDefinition/>
+    </bpmn2:startEvent>
+
+    {% if entry_scripts_enabled %}
+    {% set standard_headers_outgoing = 'SequenceFlow_HeadersToSizeGuard' %}
+    {% else %}
+    {% set standard_headers_outgoing = 'SequenceFlow_1' %}
+    {% endif %}
+    {% set standard_headers_incoming = 'SequenceFlow_StartToHeaders' %}
+    {% include "standard_headers.j2" %}
+
+    {# --- Entry-point scripts (conditional) --- #}
+    {% if entry_scripts_enabled %}
+    {% set entry_scripts_source = 'ServiceTask_StandardHeaders' %}
+    {% include "entry_scripts.j2" %}
+    {% endif %}
+
+    {% if logging_enabled %}
+    <!-- Groovy: Log payload before mapping -->
+    <bpmn2:callActivity id="CallActivity_LogBefore" name="Log Payload Before">
+      <bpmn2:extensionElements>
+        <ifl:property>
+          <key>activityType</key>
+          <value>Script</value>
+        </ifl:property>
+        <ifl:property>
+          <key>scriptBundleId</key>
+          <value>PayloadLogBefore</value>
+        </ifl:property>
+        <ifl:property>
+          <key>scriptFunction</key>
+          <value>processData</value>
+        </ifl:property>
+        <ifl:property>
+          <key>scriptType</key>
+          <value>groovy</value>
+        </ifl:property>
+        <ifl:property>
+          <key>cmdVariantUri</key>
+          <value>ctype::FlowstepVariant/cname::GroovyScript/version::1.0.1</value>
+        </ifl:property>
+      </bpmn2:extensionElements>
+      {% if entry_scripts_enabled %}
+      <bpmn2:incoming>SequenceFlow_ReplayOut</bpmn2:incoming>
+      {% else %}
+      <bpmn2:incoming>SequenceFlow_1</bpmn2:incoming>
+      {% endif %}
+      <bpmn2:outgoing>SequenceFlow_LogBeforeToMapping</bpmn2:outgoing>
+    </bpmn2:callActivity>
+    {% endif %}
+
+    {% if mapping_strategy == 'port' or mapping_strategy == 'rebuild' %}
+    <bpmn2:callActivity id="CallActivity_Mapping" name="{{ mapping_reference | default('TODO_mapping', true) }}">
+      <bpmn2:extensionElements>
+        <ifl:property>
+          <key>mappinguri</key>
+          <value/>
+        </ifl:property>
+        <ifl:property>
+          <key>mappingname</key>
+          <value>{{ mapping_reference | default('TODO_mapping', true) }}</value>
+        </ifl:property>
+        <ifl:property>
+          <key>mappingType</key>
+          <value>{{ mapping_type | default('MessageMapping', true) }}</value>
+        </ifl:property>
+        <ifl:property>
+          <key>mappingpath</key>
+          <value/>
+        </ifl:property>
+        <ifl:property>
+          <key>activityType</key>
+          <value>Mapping</value>
+        </ifl:property>
+        <ifl:property>
+          <key>cmdVariantUri</key>
+          <value>ctype::FlowstepVariant/cname::MessageMapping</value>
+        </ifl:property>
+      </bpmn2:extensionElements>
+      {% if logging_enabled %}
+      <bpmn2:incoming>SequenceFlow_LogBeforeToMapping</bpmn2:incoming>
+      {% elif entry_scripts_enabled %}
+      <bpmn2:incoming>SequenceFlow_ReplayOut</bpmn2:incoming>
+      {% else %}
+      <bpmn2:incoming>SequenceFlow_1</bpmn2:incoming>
+      {% endif %}
+      {% if logging_enabled %}
+      <bpmn2:outgoing>SequenceFlow_MappingToLogAfter</bpmn2:outgoing>
+      {% else %}
+      <bpmn2:outgoing>SequenceFlow_2</bpmn2:outgoing>
+      {% endif %}
+    </bpmn2:callActivity>
+    {% endif %}
+
+    {% if logging_enabled %}
+    <!-- Groovy: Log payload after mapping -->
+    <bpmn2:callActivity id="CallActivity_LogAfter" name="Log Payload After">
+      <bpmn2:extensionElements>
+        <ifl:property>
+          <key>activityType</key>
+          <value>Script</value>
+        </ifl:property>
+        <ifl:property>
+          <key>scriptBundleId</key>
+          <value>PayloadLogAfter</value>
+        </ifl:property>
+        <ifl:property>
+          <key>scriptFunction</key>
+          <value>processData</value>
+        </ifl:property>
+        <ifl:property>
+          <key>scriptType</key>
+          <value>groovy</value>
+        </ifl:property>
+        <ifl:property>
+          <key>cmdVariantUri</key>
+          <value>ctype::FlowstepVariant/cname::GroovyScript/version::1.0.1</value>
+        </ifl:property>
+      </bpmn2:extensionElements>
+      {% if mapping_strategy == 'port' or mapping_strategy == 'rebuild' %}
+      <bpmn2:incoming>SequenceFlow_MappingToLogAfter</bpmn2:incoming>
+      {% else %}
+      <bpmn2:incoming>SequenceFlow_LogBeforeToMapping</bpmn2:incoming>
+      {% endif %}
+      <bpmn2:outgoing>SequenceFlow_LogAfterToEnd</bpmn2:outgoing>
+    </bpmn2:callActivity>
+    {% endif %}
+
+    <bpmn2:endEvent id="EndEvent_1" name="End">
+      <bpmn2:extensionElements>
+        <ifl:property>
+          <key>cmdVariantUri</key>
+          <value>ctype::FlowstepVariant/cname::MessageEndEvent</value>
+        </ifl:property>
+      </bpmn2:extensionElements>
+      {% if logging_enabled %}
+      <bpmn2:incoming>SequenceFlow_LogAfterToEnd</bpmn2:incoming>
+      {% elif mapping_strategy == 'port' or mapping_strategy == 'rebuild' %}
+      <bpmn2:incoming>SequenceFlow_2</bpmn2:incoming>
+      {% elif entry_scripts_enabled %}
+      <bpmn2:incoming>SequenceFlow_ReplayOut</bpmn2:incoming>
+      {% else %}
+      <bpmn2:incoming>SequenceFlow_1</bpmn2:incoming>
+      {% endif %}
+      <bpmn2:messageEventDefinition/>
+    </bpmn2:endEvent>
+
+    <!-- Sequence flows -->
+    <bpmn2:sequenceFlow id="SequenceFlow_StartToHeaders" sourceRef="StartEvent_1" targetRef="ServiceTask_StandardHeaders"/>
+
+    {% if entry_scripts_enabled %}
+    {# Headers → SizeGuard → ReplaySnapshot → next_step #}
+    <bpmn2:sequenceFlow id="SequenceFlow_HeadersToSizeGuard" sourceRef="ServiceTask_StandardHeaders" targetRef="CallActivity_SizeGuard"/>
+      {% if logging_enabled %}
+    <bpmn2:sequenceFlow id="SequenceFlow_ReplayOut" sourceRef="CallActivity_ReplaySnapshot" targetRef="CallActivity_LogBefore"/>
+      {% elif mapping_strategy == 'port' or mapping_strategy == 'rebuild' %}
+    <bpmn2:sequenceFlow id="SequenceFlow_ReplayOut" sourceRef="CallActivity_ReplaySnapshot" targetRef="CallActivity_Mapping"/>
+      {% else %}
+    <bpmn2:sequenceFlow id="SequenceFlow_ReplayOut" sourceRef="CallActivity_ReplaySnapshot" targetRef="EndEvent_1"/>
+      {% endif %}
+    {% endif %}
+
+    {% if logging_enabled and (mapping_strategy == 'port' or mapping_strategy == 'rebuild') %}
+    {# [Headers/ReplayOut] → LogBefore → Mapping → LogAfter → End #}
+    {% if not entry_scripts_enabled %}
+    <bpmn2:sequenceFlow id="SequenceFlow_1" sourceRef="ServiceTask_StandardHeaders" targetRef="CallActivity_LogBefore"/>
+    {% endif %}
+    <bpmn2:sequenceFlow id="SequenceFlow_LogBeforeToMapping" sourceRef="CallActivity_LogBefore" targetRef="CallActivity_Mapping"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_MappingToLogAfter" sourceRef="CallActivity_Mapping" targetRef="CallActivity_LogAfter"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_LogAfterToEnd" sourceRef="CallActivity_LogAfter" targetRef="EndEvent_1"/>
+    {% elif logging_enabled %}
+    {# [Headers/ReplayOut] → LogBefore → LogAfter → End (no mapping) #}
+    {% if not entry_scripts_enabled %}
+    <bpmn2:sequenceFlow id="SequenceFlow_1" sourceRef="ServiceTask_StandardHeaders" targetRef="CallActivity_LogBefore"/>
+    {% endif %}
+    <bpmn2:sequenceFlow id="SequenceFlow_LogBeforeToMapping" sourceRef="CallActivity_LogBefore" targetRef="CallActivity_LogAfter"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_LogAfterToEnd" sourceRef="CallActivity_LogAfter" targetRef="EndEvent_1"/>
+    {% elif mapping_strategy == 'port' or mapping_strategy == 'rebuild' %}
+    {# [Headers/ReplayOut] → Mapping → End #}
+    {% if not entry_scripts_enabled %}
+    <bpmn2:sequenceFlow id="SequenceFlow_1" sourceRef="ServiceTask_StandardHeaders" targetRef="CallActivity_Mapping"/>
+    {% endif %}
+    <bpmn2:sequenceFlow id="SequenceFlow_2" sourceRef="CallActivity_Mapping" targetRef="EndEvent_1"/>
+    {% else %}
+    {# [Headers/ReplayOut] → End #}
+    {% if not entry_scripts_enabled %}
+    <bpmn2:sequenceFlow id="SequenceFlow_1" sourceRef="ServiceTask_StandardHeaders" targetRef="EndEvent_1"/>
+    {% endif %}
+    {% endif %}
+  </bpmn2:process>
+
+  {% if error_handling_enabled %}
+  {% include "error_local_process.j2" %}
+  {% endif %}
+
+  <!-- ============================================================ -->
+  <!-- Diagram layout                                                -->
+  <!-- ============================================================ -->
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1" name="Default Collaboration Diagram">
+    <bpmndi:BPMNPlane bpmnElement="Collaboration_1" id="BPMNPlane_1">
+      <bpmndi:BPMNShape bpmnElement="Participant_Receiver" id="BPMNShape_Participant_Receiver">
+        <dc:Bounds height="140.0" width="120.0" x="813.0" y="10.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="EndEvent_1" id="BPMNShape_EndEvent_1">
+        <dc:Bounds height="32.0" width="32.0" x="684.0" y="64.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="Participant_Sender" id="BPMNShape_Participant_Sender">
+        <dc:Bounds height="140.0" width="120.0" x="-10.0" y="10.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="Participant_Process_1" id="BPMNShape_Participant_Process_1">
+        <dc:Bounds height="330.0" width="559.0" x="200.0" y="0.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="StartEvent_1" id="BPMNShape_StartEvent_1">
+        <dc:Bounds height="32.0" width="32.0" x="220.0" y="64.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="ServiceTask_StandardHeaders" id="BPMNShape_ServiceTask_StandardHeaders">
+        <dc:Bounds height="60.0" width="100.0" x="260.0" y="50.0"/>
+      </bpmndi:BPMNShape>
+      {% include "entry_scripts_diagram.j2" %}
+      {% if logging_enabled %}
+      <bpmndi:BPMNShape bpmnElement="CallActivity_LogBefore" id="BPMNShape_CallActivity_LogBefore">
+        <dc:Bounds height="60.0" width="100.0" x="290.0" y="50.0"/>
+      </bpmndi:BPMNShape>
+      {% endif %}
+      {% if mapping_strategy == 'port' or mapping_strategy == 'rebuild' %}
+      <bpmndi:BPMNShape bpmnElement="CallActivity_Mapping" id="BPMNShape_CallActivity_Mapping">
+        <dc:Bounds height="60.0" width="100.0" x="424.0" y="50.0"/>
+      </bpmndi:BPMNShape>
+      {% endif %}
+      {% if logging_enabled %}
+      <bpmndi:BPMNShape bpmnElement="CallActivity_LogAfter" id="BPMNShape_CallActivity_LogAfter">
+        <dc:Bounds height="60.0" width="100.0" x="558.0" y="50.0"/>
+      </bpmndi:BPMNShape>
+      {% endif %}
+      <bpmndi:BPMNEdge bpmnElement="MessageFlow_Sender" id="BPMNEdge_MessageFlow_Sender" sourceElement="BPMNShape_Participant_Sender" targetElement="BPMNShape_StartEvent_1">
+        <di:waypoint x="50.0" xsi:type="dc:Point" y="80.0"/>
+        <di:waypoint x="248.0" xsi:type="dc:Point" y="80.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="MessageFlow_Receiver" id="BPMNEdge_MessageFlow_Receiver" sourceElement="BPMNShape_EndEvent_1" targetElement="BPMNShape_Participant_Receiver">
+        <di:waypoint x="700.0" xsi:type="dc:Point" y="80.0"/>
+        <di:waypoint x="873.0" xsi:type="dc:Point" y="80.0"/>
+      </bpmndi:BPMNEdge>
+      {% if error_handling_enabled %}
+      {% include "error_diagram.j2" %}
+      {% endif %}
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn2:definitions>

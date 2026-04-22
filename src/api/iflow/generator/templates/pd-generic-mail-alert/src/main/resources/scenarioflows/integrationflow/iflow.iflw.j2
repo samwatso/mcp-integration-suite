@@ -1,0 +1,513 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn2:definitions xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL"
+    xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+    xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+    xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+    xmlns:ifl="http:///com.sap.ifl.model/Ifl.xsd"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    id="Definitions_1">
+
+  <!-- ============================================================ -->
+  <!-- Collaboration                                                 -->
+  <!-- ============================================================ -->
+  <bpmn2:collaboration id="Collaboration_1" name="Default Collaboration">
+    <bpmn2:extensionElements>
+      <ifl:property>
+        <key>namespaceMapping</key>
+        <value/>
+      </ifl:property>
+      <ifl:property>
+        <key>httpSessionHandling</key>
+        <value>None</value>
+      </ifl:property>
+      <ifl:property>
+        <key>returnExceptionToSender</key>
+        <value>false</value>
+      </ifl:property>
+      <ifl:property>
+        <key>log</key>
+        <value>All events</value>
+      </ifl:property>
+      <ifl:property>
+        <key>componentVersion</key>
+        <value>1.2</value>
+      </ifl:property>
+      <ifl:property>
+        <key>allowedHeaderList</key>
+        <value>*</value>
+      </ifl:property>
+      <ifl:property>
+        <key>ServerTrace</key>
+        <value>false</value>
+      </ifl:property>
+      <ifl:property>
+        <key>cmdVariantUri</key>
+        <value>ctype::IFlowVariant/cname::IFlowConfiguration/version::1.2.4</value>
+      </ifl:property>
+    </bpmn2:extensionElements>
+
+    <!-- Sender: ProcessDirect from calling iFlow -->
+    <bpmn2:participant id="Participant_Sender" ifl:type="EndpointSender" name="CI">
+      <bpmn2:extensionElements>
+        <ifl:property>
+          <key>enableBasicAuthentication</key>
+          <value>false</value>
+        </ifl:property>
+        <ifl:property>
+          <key>ifl:type</key>
+          <value>EndpointSender</value>
+        </ifl:property>
+      </bpmn2:extensionElements>
+    </bpmn2:participant>
+
+    <!-- Receiver: Mail (Office 365) -->
+    <bpmn2:participant id="Participant_Receiver" ifl:type="EndpointRecevier" name="MAIL">
+      <bpmn2:extensionElements>
+        <ifl:property>
+          <key>ifl:type</key>
+          <value>EndpointRecevier</value>
+        </ifl:property>
+      </bpmn2:extensionElements>
+    </bpmn2:participant>
+
+    <!-- Integration Process -->
+    <bpmn2:participant id="Participant_Process_1" ifl:type="IntegrationProcess"
+        name="{{ iflow_name }}" processRef="Process_1">
+      <bpmn2:extensionElements/>
+    </bpmn2:participant>
+
+    <!-- Mail Receiver Channel -->
+    <bpmn2:messageFlow id="MessageFlow_Mail" name="Mail"
+        sourceRef="EndEvent_1" targetRef="Participant_Receiver">
+      <bpmn2:extensionElements>
+        <ifl:property>
+          <key>server</key>
+          <value>{% raw %}{{Mail_SMTP_Address}}{% endraw %}</value>
+        </ifl:property>
+        <ifl:property>
+          <key>Description</key>
+          <value/>
+        </ifl:property>
+        <ifl:property>
+          <key>bcc</key>
+          <value/>
+        </ifl:property>
+        <ifl:property>
+          <key>attachments</key>
+          <value/>
+        </ifl:property>
+        <ifl:property>
+          <key>auth</key>
+          <value>{% raw %}{{Mail_Authentication}}{% endraw %}</value>
+        </ifl:property>
+        <ifl:property>
+          <key>subject</key>
+          <value>{% raw %}{{EmailSubject}}{% endraw %}</value>
+        </ifl:property>
+        <ifl:property>
+          <key>encrypt.smime.aes.keysize</key>
+          <value>128</value>
+        </ifl:property>
+        <ifl:property>
+          <key>ComponentNS</key>
+          <value>com.sap.it.ide.mail.ui.namespace2</value>
+        </ifl:property>
+        <ifl:property>
+          <key>keep_attachments</key>
+          <value>0</value>
+        </ifl:property>
+        <ifl:property>
+          <key>body</key>
+          <value>{% raw %}{{EmailBody}}{% endraw %}</value>
+        </ifl:property>
+        <ifl:property>
+          <key>ssl</key>
+          <value>{% raw %}{{Mail_Protection}}{% endraw %}</value>
+        </ifl:property>
+        <ifl:property>
+          <key>timeout</key>
+          <value>{% raw %}{{timeout}}{% endraw %}</value>
+        </ifl:property>
+        <ifl:property>
+          <key>Name</key>
+          <value>Mail</value>
+        </ifl:property>
+        <ifl:property>
+          <key>TransportProtocolVersion</key>
+          <value>1.0</value>
+        </ifl:property>
+        <ifl:property>
+          <key>ComponentSWCVName</key>
+          <value>com.sap.it.ide.mail.ui.archive2</value>
+        </ifl:property>
+        <ifl:property>
+          <key>encrypt.smime.des.keysize</key>
+          <value>128</value>
+        </ifl:property>
+        <ifl:property>
+          <key>content_type</key>
+          <value>{% raw %}{{EmailBodyMimeType}}{% endraw %}</value>
+        </ifl:property>
+        <ifl:property>
+          <key>locationId</key>
+          <value/>
+        </ifl:property>
+        <ifl:property>
+          <key>encrypt.smime.algorithm</key>
+          <value>aes</value>
+        </ifl:property>
+        <ifl:property>
+          <key>signature.smime.table</key>
+          <value/>
+        </ifl:property>
+        <ifl:property>
+          <key>from</key>
+          <value>{% raw %}{{Email_From}}{% endraw %}</value>
+        </ifl:property>
+        <ifl:property>
+          <key>MessageProtocol</key>
+          <value>None</value>
+        </ifl:property>
+        <ifl:property>
+          <key>ComponentSWCVId</key>
+          <value>com.sap.it.ide.mail.ui.archive2</value>
+        </ifl:property>
+        <ifl:property>
+          <key>direction</key>
+          <value>Receiver</value>
+        </ifl:property>
+        <ifl:property>
+          <key>cc</key>
+          <value>{% raw %}{{EmailcC}}{% endraw %}</value>
+        </ifl:property>
+        <ifl:property>
+          <key>attachmentTransferEncoding</key>
+          <value>auto</value>
+        </ifl:property>
+        <ifl:property>
+          <key>ComponentType</key>
+          <value>Mail</value>
+        </ifl:property>
+        <ifl:property>
+          <key>content_encoding</key>
+          <value>{% raw %}{{EmailBodyEncoding}}{% endraw %}</value>
+        </ifl:property>
+        <ifl:property>
+          <key>proxyType</key>
+          <value>{% raw %}{{Mail_ProxyType}}{% endraw %}</value>
+        </ifl:property>
+        <ifl:property>
+          <key>componentVersion</key>
+          <value>1.9</value>
+        </ifl:property>
+        <ifl:property>
+          <key>system</key>
+          <value>MAIL</value>
+        </ifl:property>
+        <ifl:property>
+          <key>signature.smime.clearText</key>
+          <value>1</value>
+        </ifl:property>
+        <ifl:property>
+          <key>encrypt.type</key>
+          <value>{% raw %}{{EmailSignatureEncryptionType}}{% endraw %}</value>
+        </ifl:property>
+        <ifl:property>
+          <key>TransportProtocol</key>
+          <value>SMTP</value>
+        </ifl:property>
+        <ifl:property>
+          <key>tokenCredential</key>
+          <value>{% raw %}{{Mail_CredentialName}}{% endraw %}</value>
+        </ifl:property>
+        <ifl:property>
+          <key>to</key>
+          <value>{% raw %}{{EmailTo}}{% endraw %}</value>
+        </ifl:property>
+        <ifl:property>
+          <key>encrypt.smime.keys</key>
+          <value/>
+        </ifl:property>
+        <ifl:property>
+          <key>cmdVariantUri</key>
+          <value>ctype::AdapterVariant/cname::sap:Mail/tp::SMTP/mp::None/direction::Receiver/version::1.9.1</value>
+        </ifl:property>
+        <ifl:property>
+          <key>user</key>
+          <value>{% raw %}{{Mail_Creds}}{% endraw %}</value>
+        </ifl:property>
+        <ifl:property>
+          <key>MessageProtocolVersion</key>
+          <value>1.0</value>
+        </ifl:property>
+      </bpmn2:extensionElements>
+    </bpmn2:messageFlow>
+
+    <!-- ProcessDirect Sender Channel -->
+    <bpmn2:messageFlow id="MessageFlow_PD" name="ProcessDirect"
+        sourceRef="Participant_Sender" targetRef="StartEvent_1">
+      <bpmn2:extensionElements>
+        <ifl:property>
+          <key>ComponentType</key>
+          <value>ProcessDirect</value>
+        </ifl:property>
+        <ifl:property>
+          <key>Description</key>
+          <value/>
+        </ifl:property>
+        <ifl:property>
+          <key>address</key>
+          <value>{% raw %}{{ProcessDirect_Address}}{% endraw %}</value>
+        </ifl:property>
+        <ifl:property>
+          <key>ComponentNS</key>
+          <value>sap</value>
+        </ifl:property>
+        <ifl:property>
+          <key>Vendor</key>
+          <value>SAP</value>
+        </ifl:property>
+        <ifl:property>
+          <key>componentVersion</key>
+          <value>1.1</value>
+        </ifl:property>
+        <ifl:property>
+          <key>Name</key>
+          <value>ProcessDirect</value>
+        </ifl:property>
+        <ifl:property>
+          <key>TransportProtocolVersion</key>
+          <value>1.1.1</value>
+        </ifl:property>
+        <ifl:property>
+          <key>ComponentSWCVName</key>
+          <value>external</value>
+        </ifl:property>
+        <ifl:property>
+          <key>system</key>
+          <value>CI</value>
+        </ifl:property>
+        <ifl:property>
+          <key>TransportProtocol</key>
+          <value>Not Applicable</value>
+        </ifl:property>
+        <ifl:property>
+          <key>cmdVariantUri</key>
+          <value>ctype::AdapterVariant/cname::ProcessDirect/vendor::SAP/tp::Not Applicable/mp::Not Applicable/direction::Sender/version::1.1.1</value>
+        </ifl:property>
+        <ifl:property>
+          <key>MessageProtocol</key>
+          <value>Not Applicable</value>
+        </ifl:property>
+        <ifl:property>
+          <key>MessageProtocolVersion</key>
+          <value>1.1.1</value>
+        </ifl:property>
+        <ifl:property>
+          <key>ComponentSWCVId</key>
+          <value>1.1.1</value>
+        </ifl:property>
+        <ifl:property>
+          <key>direction</key>
+          <value>Sender</value>
+        </ifl:property>
+      </bpmn2:extensionElements>
+    </bpmn2:messageFlow>
+  </bpmn2:collaboration>
+
+  <!-- ============================================================ -->
+  <!-- Integration Process                                           -->
+  <!-- ============================================================ -->
+  <bpmn2:process id="Process_1" name="{{ iflow_name }}">
+    <bpmn2:extensionElements>
+      <ifl:property>
+        <key>transactionTimeout</key>
+        <value>30</value>
+      </ifl:property>
+      <ifl:property>
+        <key>componentVersion</key>
+        <value>1.1</value>
+      </ifl:property>
+      <ifl:property>
+        <key>cmdVariantUri</key>
+        <value>ctype::FlowElementVariant/cname::IntegrationProcess/version::1.1.3</value>
+      </ifl:property>
+      <ifl:property>
+        <key>transactionalHandling</key>
+        <value>Not Required</value>
+      </ifl:property>
+    </bpmn2:extensionElements>
+
+    <!-- Exception Subprocess -->
+    <bpmn2:subProcess id="SubProcess_Error" name="Exception Subprocess">
+      <bpmn2:extensionElements>
+        <ifl:property>
+          <key>componentVersion</key>
+          <value>1.1</value>
+        </ifl:property>
+        <ifl:property>
+          <key>activityType</key>
+          <value>ErrorEventSubProcessTemplate</value>
+        </ifl:property>
+        <ifl:property>
+          <key>cmdVariantUri</key>
+          <value>ctype::FlowstepVariant/cname::ErrorEventSubProcessTemplate/version::1.1.0</value>
+        </ifl:property>
+      </bpmn2:extensionElements>
+
+      <bpmn2:callActivity id="CallActivity_ErrorScript" name="Error Response">
+        <bpmn2:extensionElements>
+          <ifl:property>
+            <key>scriptFunction</key>
+            <value/>
+          </ifl:property>
+          <ifl:property>
+            <key>componentVersion</key>
+            <value>1.0</value>
+          </ifl:property>
+          <ifl:property>
+            <key>activityType</key>
+            <value>Script</value>
+          </ifl:property>
+          <ifl:property>
+            <key>cmdVariantUri</key>
+            <value>ctype::FlowstepVariant/cname::GroovyScript/version::1.0.1</value>
+          </ifl:property>
+          <ifl:property>
+            <key>subActivityType</key>
+            <value>GroovyScript</value>
+          </ifl:property>
+          <ifl:property>
+            <key>script</key>
+            <value>ExceptionBodyLoggingScript.groovy</value>
+          </ifl:property>
+        </bpmn2:extensionElements>
+        <bpmn2:incoming>ErrorFlow_1</bpmn2:incoming>
+        <bpmn2:outgoing>ErrorFlow_2</bpmn2:outgoing>
+      </bpmn2:callActivity>
+
+      <bpmn2:endEvent id="ErrorEndEvent_1" name="Error End">
+        <bpmn2:incoming>ErrorFlow_2</bpmn2:incoming>
+        <bpmn2:errorEventDefinition>
+          <bpmn2:extensionElements>
+            <ifl:property>
+              <key>cmdVariantUri</key>
+              <value>ctype::FlowstepVariant/cname::ErrorEndEvent</value>
+            </ifl:property>
+            <ifl:property>
+              <key>activityType</key>
+              <value>EndErrorEvent</value>
+            </ifl:property>
+          </bpmn2:extensionElements>
+        </bpmn2:errorEventDefinition>
+      </bpmn2:endEvent>
+
+      <bpmn2:startEvent id="ErrorStartEvent_1" name="Error Start">
+        <bpmn2:outgoing>ErrorFlow_1</bpmn2:outgoing>
+        <bpmn2:errorEventDefinition>
+          <bpmn2:extensionElements>
+            <ifl:property>
+              <key>cmdVariantUri</key>
+              <value>ctype::FlowstepVariant/cname::ErrorStartEvent</value>
+            </ifl:property>
+            <ifl:property>
+              <key>activityType</key>
+              <value>StartErrorEvent</value>
+            </ifl:property>
+          </bpmn2:extensionElements>
+        </bpmn2:errorEventDefinition>
+      </bpmn2:startEvent>
+
+      <bpmn2:sequenceFlow id="ErrorFlow_2" sourceRef="CallActivity_ErrorScript" targetRef="ErrorEndEvent_1"/>
+      <bpmn2:sequenceFlow id="ErrorFlow_1" sourceRef="ErrorStartEvent_1" targetRef="CallActivity_ErrorScript"/>
+    </bpmn2:subProcess>
+
+    <!-- Main flow: Start → End (passthrough to Mail receiver) -->
+    <bpmn2:startEvent id="StartEvent_1" name="Start">
+      <bpmn2:extensionElements>
+        <ifl:property>
+          <key>componentVersion</key>
+          <value>1.0</value>
+        </ifl:property>
+        <ifl:property>
+          <key>cmdVariantUri</key>
+          <value>ctype::FlowstepVariant/cname::MessageStartEvent/version::1.0</value>
+        </ifl:property>
+      </bpmn2:extensionElements>
+      <bpmn2:outgoing>SequenceFlow_1</bpmn2:outgoing>
+      <bpmn2:messageEventDefinition/>
+    </bpmn2:startEvent>
+
+    <bpmn2:endEvent id="EndEvent_1" name="End">
+      <bpmn2:extensionElements>
+        <ifl:property>
+          <key>componentVersion</key>
+          <value>1.1</value>
+        </ifl:property>
+        <ifl:property>
+          <key>cmdVariantUri</key>
+          <value>ctype::FlowstepVariant/cname::MessageEndEvent/version::1.1.0</value>
+        </ifl:property>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>SequenceFlow_1</bpmn2:incoming>
+      <bpmn2:messageEventDefinition/>
+    </bpmn2:endEvent>
+
+    <bpmn2:sequenceFlow id="SequenceFlow_1" sourceRef="StartEvent_1" targetRef="EndEvent_1"/>
+  </bpmn2:process>
+
+  <!-- ============================================================ -->
+  <!-- Diagram layout                                                -->
+  <!-- ============================================================ -->
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1" name="Default Collaboration Diagram">
+    <bpmndi:BPMNPlane bpmnElement="Collaboration_1" id="BPMNPlane_1">
+      <bpmndi:BPMNShape bpmnElement="EndEvent_1" id="BPMNShape_EndEvent_1">
+        <dc:Bounds height="32.0" width="32.0" x="448.0" y="131.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="ErrorStartEvent_1" id="BPMNShape_ErrorStartEvent_1">
+        <dc:Bounds height="32.0" width="32.0" x="385.0" y="269.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="StartEvent_1" id="BPMNShape_StartEvent_1">
+        <dc:Bounds height="32.0" width="32.0" x="356.0" y="131.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="SubProcess_Error" id="BPMNShape_SubProcess_Error">
+        <dc:Bounds height="140.0" width="422.0" x="352.0" y="223.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="ErrorEndEvent_1" id="BPMNShape_ErrorEndEvent_1">
+        <dc:Bounds height="32.0" width="32.0" x="680.0" y="277.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="CallActivity_ErrorScript" id="BPMNShape_CallActivity_ErrorScript">
+        <dc:Bounds height="60.0" width="100.0" x="503.0" y="263.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="Participant_Receiver" id="BPMNShape_Participant_Receiver">
+        <dc:Bounds height="140.0" width="100.0" x="408.0" y="-159.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="Participant_Sender" id="BPMNShape_Participant_Sender">
+        <dc:Bounds height="140.0" width="100.0" x="128.0" y="77.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="Participant_Process_1" id="BPMNShape_Participant_Process_1">
+        <dc:Bounds height="302.0" width="473.0" x="323.0" y="81.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="ErrorFlow_1" id="BPMNEdge_ErrorFlow_1" sourceElement="BPMNShape_ErrorStartEvent_1" targetElement="BPMNShape_CallActivity_ErrorScript">
+        <di:waypoint x="401.5" xsi:type="dc:Point" y="285.0"/>
+        <di:waypoint x="535.5" xsi:type="dc:Point" y="285.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="ErrorFlow_2" id="BPMNEdge_ErrorFlow_2" sourceElement="BPMNShape_CallActivity_ErrorScript" targetElement="BPMNShape_ErrorEndEvent_1">
+        <di:waypoint x="553.5" xsi:type="dc:Point" y="293.0"/>
+        <di:waypoint x="696.5" xsi:type="dc:Point" y="293.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="SequenceFlow_1" id="BPMNEdge_SequenceFlow_1" sourceElement="BPMNShape_StartEvent_1" targetElement="BPMNShape_EndEvent_1">
+        <di:waypoint x="388.0" xsi:type="dc:Point" y="147.0"/>
+        <di:waypoint x="448.0" xsi:type="dc:Point" y="147.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="MessageFlow_Mail" id="BPMNEdge_MessageFlow_Mail" sourceElement="BPMNShape_EndEvent_1" targetElement="BPMNShape_Participant_Receiver">
+        <di:waypoint x="461.0" xsi:type="dc:Point" y="147.0"/>
+        <di:waypoint x="461.0" xsi:type="dc:Point" y="-89.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="MessageFlow_PD" id="BPMNEdge_MessageFlow_PD" sourceElement="BPMNShape_Participant_Sender" targetElement="BPMNShape_StartEvent_1">
+        <di:waypoint x="178.0" xsi:type="dc:Point" y="147.0"/>
+        <di:waypoint x="372.0" xsi:type="dc:Point" y="147.0"/>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn2:definitions>

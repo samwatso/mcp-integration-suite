@@ -1,0 +1,90 @@
+    {# === Exception Subprocess: Process Call → Escalation End ===
+       Error Start triggers the exception subprocess; it calls the Error LIP
+       which builds the error payload and sends via ProcessDirect to the
+       shared pd-generic-mail-alert iFlow. #}
+    <bpmn2:subProcess id="SubProcess_Error" name="Exception Subprocess" triggeredByEvent="true">
+      <bpmn2:extensionElements>
+        <ifl:property>
+          <key>componentVersion</key>
+          <value>{{ flowstep_component_versions.ErrorEventSubProcessTemplate }}</value>
+        </ifl:property>
+        <ifl:property>
+          <key>activityType</key>
+          <value>ErrorEventSubProcessTemplate</value>
+        </ifl:property>
+        <ifl:property>
+          <key>cmdVariantUri</key>
+          <value>ctype::FlowstepVariant/cname::ErrorEventSubProcessTemplate/version::{{ flowstep_versions.ErrorEventSubProcessTemplate }}</value>
+        </ifl:property>
+      </bpmn2:extensionElements>
+
+      <bpmn2:startEvent id="ErrorStartEvent_1" name="Error Start">
+        <bpmn2:outgoing>ErrorFlow_1</bpmn2:outgoing>
+        <bpmn2:errorEventDefinition>
+          <bpmn2:extensionElements>
+            <ifl:property>
+              <key>cmdVariantUri</key>
+              <value>ctype::FlowstepVariant/cname::ErrorStartEvent</value>
+            </ifl:property>
+            <ifl:property>
+              <key>activityType</key>
+              <value>StartErrorEvent</value>
+            </ifl:property>
+          </bpmn2:extensionElements>
+        </bpmn2:errorEventDefinition>
+      </bpmn2:startEvent>
+
+      <bpmn2:callActivity id="CallActivity_ProcessCall" name="Process Call">
+        <bpmn2:extensionElements>
+          <ifl:property>
+            <key>processId</key>
+            <value>Process_Error</value>
+          </ifl:property>
+          <ifl:property>
+            <key>componentVersion</key>
+            <value>1.0</value>
+          </ifl:property>
+          <ifl:property>
+            <key>activityType</key>
+            <value>ProcessCallElement</value>
+          </ifl:property>
+          <ifl:property>
+            <key>cmdVariantUri</key>
+            <value>ctype::FlowstepVariant/cname::NonLoopingProcess/version::1.0.4</value>
+          </ifl:property>
+          <ifl:property>
+            <key>subActivityType</key>
+            <value>NonLoopingProcess</value>
+          </ifl:property>
+        </bpmn2:extensionElements>
+        <bpmn2:incoming>ErrorFlow_1</bpmn2:incoming>
+        <bpmn2:outgoing>ErrorFlow_2</bpmn2:outgoing>
+      </bpmn2:callActivity>
+
+      <bpmn2:endEvent id="ErrorEndEvent_Escalation" name="Escalation End">
+        <bpmn2:incoming>ErrorFlow_2</bpmn2:incoming>
+        <bpmn2:escalationEventDefinition>
+          <bpmn2:extensionElements>
+            <ifl:property>
+              <key>ErrorCode</key>
+              <value>ReceiverNotFound</value>
+            </ifl:property>
+            <ifl:property>
+              <key>componentVersion</key>
+              <value>1.0</value>
+            </ifl:property>
+            <ifl:property>
+              <key>cmdVariantUri</key>
+              <value>ctype::FlowstepVariant/cname::EscalationEndEvent/version::1.0.0</value>
+            </ifl:property>
+            <ifl:property>
+              <key>activityType</key>
+              <value>EscalationEndEvent</value>
+            </ifl:property>
+          </bpmn2:extensionElements>
+        </bpmn2:escalationEventDefinition>
+      </bpmn2:endEvent>
+
+      <bpmn2:sequenceFlow id="ErrorFlow_1" sourceRef="ErrorStartEvent_1" targetRef="CallActivity_ProcessCall"/>
+      <bpmn2:sequenceFlow id="ErrorFlow_2" sourceRef="CallActivity_ProcessCall" targetRef="ErrorEndEvent_Escalation"/>
+    </bpmn2:subProcess>

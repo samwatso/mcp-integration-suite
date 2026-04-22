@@ -1,0 +1,19 @@
+import com.sap.gateway.ip.core.customdev.util.Message
+
+def Message processData(Message message) {
+    def ex = message.getProperty('CamelExceptionCaught')
+    def errorText = ex != null ? ex.getMessage() : 'Unknown error'
+    def timestamp = new Date().format("yyyy-MM-dd'T'HH:mm:ss'Z'")
+
+    def body = """<errorReport>
+  <iFlowId>{{ iflow_id }}</iFlowId>
+  <iFlowName>{{ iflow_name }}</iFlowName>
+  <timestamp>${timestamp}</timestamp>
+  <error>${errorText}</error>
+  <originalPayload>${message.getBody(String)}</originalPayload>
+</errorReport>"""
+
+    message.setBody(body)
+    message.setHeader('Subject', '{{ error_mail_subject }}')
+    return message
+}

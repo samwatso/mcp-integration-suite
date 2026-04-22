@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<parameters>
+  <!-- === IDoc Sender Parameters === -->
+  <parameter>
+    <key/>
+    <name>IDoc_Sender_Address</name>
+    <type>xsd:string</type>
+    <isRequired>false</isRequired>
+    <constraint/>
+    <description>IDoc sender endpoint address path</description>
+    <additionalMetadata/>
+  </parameter>
+  <!-- === SFTP Receiver Parameters === -->
+  <parameter>
+    <key/>
+    <name>SFTP_Receiver_Host</name>
+    <type>xsd:string</type>
+    <isRequired>false</isRequired>
+    <constraint/>
+    <description>SFTP receiver host address</description>
+    <additionalMetadata/>
+  </parameter>
+  <parameter>
+    <key/>
+    <name>SFTP_Receiver_Path</name>
+    <type>xsd:string</type>
+    <isRequired>false</isRequired>
+    <constraint/>
+    <description>SFTP receiver directory path</description>
+    <additionalMetadata/>
+  </parameter>
+  <parameter>
+    <key/>
+    <name>SFTP_Receiver_FileName</name>
+    <type>xsd:string</type>
+    <isRequired>false</isRequired>
+    <constraint/>
+    <description>SFTP receiver file name</description>
+    <additionalMetadata/>
+  </parameter>
+  <parameter>
+    <key/>
+    <name>SFTP_Receiver_CredentialName</name>
+    <type>xsd:string</type>
+    <isRequired>false</isRequired>
+    <constraint/>
+    <description>Security artifact name for SFTP receiver authentication</description>
+    <additionalMetadata/>
+  </parameter>
+  <parameter>
+    <key/>
+    <name>SFTP_Receiver_Authentication</name>
+    <type>xsd:string</type>
+    <isRequired>false</isRequired>
+    <constraint/>
+    <description>Authentication method for SFTP receiver</description>
+    <additionalMetadata>
+      <isCombobox>true</isCombobox>
+    </additionalMetadata>
+  </parameter>
+  <parameter>
+    <key/>
+    <name>SFTP_Receiver_ProxyType</name>
+    <type>xsd:string</type>
+    <isRequired>false</isRequired>
+    <constraint/>
+    <description>Proxy type for SFTP receiver connection</description>
+    <additionalMetadata>
+      <isCombobox>true</isCombobox>
+    </additionalMetadata>
+  </parameter>
+  <parameter>
+    <key/>
+    <name>SFTP_Receiver_Timeout</name>
+    <type>xsd:integer</type>
+    <isRequired>false</isRequired>
+    <constraint/>
+    <description>Connection timeout in milliseconds for SFTP receiver</description>
+    <additionalMetadata/>
+  </parameter>
+{% include "script_parameters.propdef.j2" %}
+  {% if error_handling_enabled %}
+  <parameter>
+    <key/>
+    <name>ProcessDirect_Address</name>
+    <type>xsd:string</type>
+    <isRequired>false</isRequired>
+    <constraint/>
+    <description>ProcessDirect address for the error handling utility iFlow</description>
+    <additionalMetadata/>
+  </parameter>
+  {% endif %}
+  <param_references>
+    <reference attribute_category="IDOC" attribute_id="ctype::AdapterVariant/cname::sap:IDOC/tp::HTTPS/mp::IDoc/direction::Sender/version::{{ adapter_versions.IDOC }}/attrId::address" attribute_uilabel="Address" param_key="IDoc_Sender_Address"/>
+    <reference attribute_category="SFTP" attribute_id="ctype::AdapterVariant/cname::sap:SFTP/tp::SFTP/mp::File/direction::Receiver/version::{{ adapter_versions.SFTP }}/attrId::host" attribute_uilabel="Address" param_key="SFTP_Receiver_Host"/>
+    <reference attribute_category="SFTP" attribute_id="ctype::AdapterVariant/cname::sap:SFTP/tp::SFTP/mp::File/direction::Receiver/version::{{ adapter_versions.SFTP }}/attrId::path" attribute_uilabel="File Path" param_key="SFTP_Receiver_Path"/>
+    <reference attribute_category="SFTP" attribute_id="ctype::AdapterVariant/cname::sap:SFTP/tp::SFTP/mp::File/direction::Receiver/version::{{ adapter_versions.SFTP }}/attrId::fileName" attribute_uilabel="File Name" param_key="SFTP_Receiver_FileName"/>
+    <reference attribute_category="SFTP" attribute_id="ctype::AdapterVariant/cname::sap:SFTP/tp::SFTP/mp::File/direction::Receiver/version::{{ adapter_versions.SFTP }}/attrId::tokenCredential" attribute_uilabel="Credential Name" param_key="SFTP_Receiver_CredentialName"/>
+    <reference attribute_category="SFTP" attribute_id="ctype::AdapterVariant/cname::sap:SFTP/tp::SFTP/mp::File/direction::Receiver/version::{{ adapter_versions.SFTP }}/attrId::authentication" attribute_uilabel="Authentication" param_key="SFTP_Receiver_Authentication"/>
+    <reference attribute_category="SFTP" attribute_id="ctype::AdapterVariant/cname::sap:SFTP/tp::SFTP/mp::File/direction::Receiver/version::{{ adapter_versions.SFTP }}/attrId::proxyType" attribute_uilabel="Proxy Type" param_key="SFTP_Receiver_ProxyType"/>
+    <reference attribute_category="SFTP" attribute_id="ctype::AdapterVariant/cname::sap:SFTP/tp::SFTP/mp::File/direction::Receiver/version::{{ adapter_versions.SFTP }}/attrId::timeout" attribute_uilabel="Timeout (in ms)" param_key="SFTP_Receiver_Timeout"/>
+    {% if error_handling_enabled %}
+    <reference attribute_category="CI" attribute_id="ctype::Adapter/cname::ProcessDirect/vendor::SAP/version::{{ adapter_versions.PROCESSDIRECT }}/attrId::address" attribute_uilabel="Address" param_key="ProcessDirect_Address"/>
+    {% endif %}
+  </param_references>
+</parameters>

@@ -1,0 +1,59 @@
+      <!-- Error handling: diagram shapes -->
+      <bpmndi:BPMNShape bpmnElement="Participant_ErrorPD" id="BPMNShape_Participant_ErrorPD">
+        <dc:Bounds height="140.0" width="120.0" x="304.0" y="570.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="SubProcess_Error" id="BPMNShape_SubProcess_Error">
+        <dc:Bounds height="140.0" width="408.0" x="229.0" y="170.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="CallActivity_ProcessCall" id="BPMNShape_CallActivity_ProcessCall">
+        <dc:Bounds height="60.0" width="100.0" x="367.0" y="210.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="ErrorStartEvent_1" id="BPMNShape_ErrorStartEvent_1">
+        <dc:Bounds height="32.0" width="32.0" x="262.0" y="216.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="ErrorEndEvent_Escalation" id="BPMNShape_ErrorEndEvent_Escalation">
+        <dc:Bounds height="32.0" width="32.0" x="543.0" y="224.0"/>
+      </bpmndi:BPMNShape>
+      <!-- Error LIP shapes -->
+      <bpmndi:BPMNShape bpmnElement="Participant_Process_Error" id="BPMNShape_Participant_Process_Error">
+        <dc:Bounds height="141.0" width="525.0" x="200.0" y="357.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="ErrorProcess_Start" id="BPMNShape_ErrorProcess_Start">
+        <dc:Bounds height="32.0" width="32.0" x="222.0" y="427.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="CallActivity_ErrorScript" id="BPMNShape_CallActivity_ErrorScript">
+        <dc:Bounds height="60.0" width="100.0" x="297.0" y="413.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="ServiceTask_SendError" id="BPMNShape_ServiceTask_SendError">
+        <dc:Bounds height="60.0" width="100.0" x="427.0" y="413.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="ErrorProcess_End" id="BPMNShape_ErrorProcess_End">
+        <dc:Bounds height="32.0" width="32.0" x="574.0" y="427.0"/>
+      </bpmndi:BPMNShape>
+      <!-- Error subprocess edges -->
+      <bpmndi:BPMNEdge bpmnElement="ErrorFlow_1" id="BPMNEdge_ErrorFlow_1" sourceElement="BPMNShape_ErrorStartEvent_1" targetElement="BPMNShape_CallActivity_ProcessCall">
+        <di:waypoint x="278.0" xsi:type="dc:Point" y="232.0"/>
+        <di:waypoint x="367.0" xsi:type="dc:Point" y="240.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="ErrorFlow_2" id="BPMNEdge_ErrorFlow_2" sourceElement="BPMNShape_CallActivity_ProcessCall" targetElement="BPMNShape_ErrorEndEvent_Escalation">
+        <di:waypoint x="467.0" xsi:type="dc:Point" y="240.0"/>
+        <di:waypoint x="543.0" xsi:type="dc:Point" y="240.0"/>
+      </bpmndi:BPMNEdge>
+      <!-- Error LIP edges -->
+      <bpmndi:BPMNEdge bpmnElement="ErrorProcess_Flow1" id="BPMNEdge_ErrorProcess_Flow1" sourceElement="BPMNShape_ErrorProcess_Start" targetElement="BPMNShape_CallActivity_ErrorScript">
+        <di:waypoint x="238.0" xsi:type="dc:Point" y="443.0"/>
+        <di:waypoint x="297.0" xsi:type="dc:Point" y="443.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="ErrorProcess_Flow_ScriptToSend" id="BPMNEdge_ErrorProcess_Flow_ScriptToSend" sourceElement="BPMNShape_CallActivity_ErrorScript" targetElement="BPMNShape_ServiceTask_SendError">
+        <di:waypoint x="397.0" xsi:type="dc:Point" y="443.0"/>
+        <di:waypoint x="427.0" xsi:type="dc:Point" y="443.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="ErrorProcess_Flow2" id="BPMNEdge_ErrorProcess_Flow2" sourceElement="BPMNShape_ServiceTask_SendError" targetElement="BPMNShape_ErrorProcess_End">
+        <di:waypoint x="527.0" xsi:type="dc:Point" y="443.0"/>
+        <di:waypoint x="574.0" xsi:type="dc:Point" y="443.0"/>
+      </bpmndi:BPMNEdge>
+      <!-- ProcessDirect message flow edge -->
+      <bpmndi:BPMNEdge bpmnElement="MessageFlow_Error" id="BPMNEdge_MessageFlow_Error" sourceElement="BPMNShape_ServiceTask_SendError" targetElement="BPMNShape_Participant_ErrorPD">
+        <di:waypoint x="465.0" xsi:type="dc:Point" y="473.0"/>
+        <di:waypoint x="365.5" xsi:type="dc:Point" y="570.0"/>
+      </bpmndi:BPMNEdge>

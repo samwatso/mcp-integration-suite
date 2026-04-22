@@ -1,0 +1,106 @@
+  {# === Exception Local Integration Process ===
+     Called by the exception subprocess via Process Call.
+     Builds a structured error payload and sends it to the shared
+     pd-generic-mail-alert iFlow via ProcessDirect. #}
+  <bpmn2:process id="Process_Error" name="Exception Local Integration Process">
+    <bpmn2:extensionElements>
+      <ifl:property>
+        <key>transactionTimeout</key>
+        <value>30</value>
+      </ifl:property>
+      <ifl:property>
+        <key>processType</key>
+        <value>directCall</value>
+      </ifl:property>
+      <ifl:property>
+        <key>componentVersion</key>
+        <value>1.1</value>
+      </ifl:property>
+      <ifl:property>
+        <key>cmdVariantUri</key>
+        <value>ctype::FlowElementVariant/cname::LocalIntegrationProcess/version::1.1.3</value>
+      </ifl:property>
+      <ifl:property>
+        <key>transactionalHandling</key>
+        <value>From Calling Process</value>
+      </ifl:property>
+    </bpmn2:extensionElements>
+
+    <bpmn2:startEvent id="ErrorProcess_Start" name="Start">
+      <bpmn2:extensionElements>
+        <ifl:property>
+          <key>cmdVariantUri</key>
+          <value>ctype::FlowstepVariant/cname::StartEvent</value>
+        </ifl:property>
+        <ifl:property>
+          <key>activityType</key>
+          <value>StartEvent</value>
+        </ifl:property>
+      </bpmn2:extensionElements>
+      <bpmn2:outgoing>ErrorProcess_Flow1</bpmn2:outgoing>
+    </bpmn2:startEvent>
+
+    <bpmn2:callActivity id="CallActivity_ErrorScript" name="Exception Handler">
+      <bpmn2:extensionElements>
+        <ifl:property>
+          <key>activityType</key>
+          <value>Script</value>
+        </ifl:property>
+        <ifl:property>
+          <key>scriptBundleId</key>
+          <value>ExceptionHandler</value>
+        </ifl:property>
+        <ifl:property>
+          <key>scriptFunction</key>
+          <value>processData</value>
+        </ifl:property>
+        <ifl:property>
+          <key>scriptType</key>
+          <value>groovy</value>
+        </ifl:property>
+        <ifl:property>
+          <key>cmdVariantUri</key>
+          <value>ctype::FlowstepVariant/cname::GroovyScript/version::1.0.1</value>
+        </ifl:property>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>ErrorProcess_Flow1</bpmn2:incoming>
+      <bpmn2:outgoing>ErrorProcess_Flow_ScriptToSend</bpmn2:outgoing>
+    </bpmn2:callActivity>
+
+    <bpmn2:callActivity id="ServiceTask_SendError" name="Send Error">
+      <bpmn2:extensionElements>
+        <ifl:property>
+          <key>componentVersion</key>
+          <value>1.0</value>
+        </ifl:property>
+        <ifl:property>
+          <key>activityType</key>
+          <value>ExternalCall</value>
+        </ifl:property>
+        <ifl:property>
+          <key>cmdVariantUri</key>
+          <value>ctype::FlowstepVariant/cname::ExternalCall/version::1.0.4</value>
+        </ifl:property>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>ErrorProcess_Flow_ScriptToSend</bpmn2:incoming>
+      <bpmn2:outgoing>ErrorProcess_Flow2</bpmn2:outgoing>
+    </bpmn2:callActivity>
+
+    <bpmn2:endEvent id="ErrorProcess_End" name="End">
+      <bpmn2:extensionElements>
+        <ifl:property>
+          <key>cmdVariantUri</key>
+          <value>ctype::FlowstepVariant/cname::EndEvent</value>
+        </ifl:property>
+        <ifl:property>
+          <key>activityType</key>
+          <value>EndEvent</value>
+        </ifl:property>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>ErrorProcess_Flow2</bpmn2:incoming>
+    </bpmn2:endEvent>
+
+    <bpmn2:sequenceFlow id="ErrorProcess_Flow1" sourceRef="ErrorProcess_Start" targetRef="CallActivity_ErrorScript"/>
+    <bpmn2:sequenceFlow id="ErrorProcess_Flow_ScriptToSend" sourceRef="CallActivity_ErrorScript" targetRef="ServiceTask_SendError"/>
+    <bpmn2:sequenceFlow id="ErrorProcess_Flow2" sourceRef="ServiceTask_SendError" targetRef="ErrorProcess_End"/>
+  </bpmn2:process>

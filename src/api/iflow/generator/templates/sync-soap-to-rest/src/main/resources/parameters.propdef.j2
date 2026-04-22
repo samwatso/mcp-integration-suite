@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<parameters>
+  <!-- === SOAP Sender Parameters === -->
+  <parameter>
+    <key/>
+    <name>SOAP_Sender_Address</name>
+    <type>xsd:string</type>
+    <isRequired>false</isRequired>
+    <constraint/>
+    <description>SOAP sender endpoint address</description>
+    <additionalMetadata/>
+  </parameter>
+  <parameter>
+    <key/>
+    <name>SOAP_Sender_WSDLUrl</name>
+    <type>xsd:string</type>
+    <isRequired>false</isRequired>
+    <constraint/>
+    <description>WSDL URL for SOAP sender service definition</description>
+    <additionalMetadata/>
+  </parameter>
+  <parameter>
+    <key/>
+    <name>SOAP_Sender_AuthType</name>
+    <type>xsd:string</type>
+    <isRequired>false</isRequired>
+    <constraint/>
+    <description>Authentication type for SOAP sender</description>
+    <additionalMetadata>
+      <isCombobox>true</isCombobox>
+    </additionalMetadata>
+  </parameter>
+  <!-- === HTTP Receiver Parameters === -->
+  <parameter>
+    <key/>
+    <name>HTTP_Receiver_Address</name>
+    <type>xsd:string</type>
+    <isRequired>false</isRequired>
+    <constraint/>
+    <description>Target HTTP endpoint address</description>
+    <additionalMetadata/>
+  </parameter>
+  <parameter>
+    <key/>
+    <name>HTTP_Receiver_Query</name>
+    <type>xsd:string</type>
+    <isRequired>false</isRequired>
+    <constraint/>
+    <description>Query string appended to the receiver URL</description>
+    <additionalMetadata/>
+  </parameter>
+  <parameter>
+    <key/>
+    <name>HTTP_Receiver_Method</name>
+    <type>xsd:string</type>
+    <isRequired>false</isRequired>
+    <constraint/>
+    <description>HTTP method for receiver call</description>
+    <additionalMetadata>
+      <isCombobox>true</isCombobox>
+    </additionalMetadata>
+  </parameter>
+  <parameter>
+    <key/>
+    <name>HTTP_Receiver_AuthMethod</name>
+    <type>xsd:string</type>
+    <isRequired>false</isRequired>
+    <constraint/>
+    <description>Authentication method for HTTP receiver</description>
+    <additionalMetadata>
+      <isCombobox>true</isCombobox>
+    </additionalMetadata>
+  </parameter>
+  <parameter>
+    <key/>
+    <name>HTTP_Receiver_CredentialName</name>
+    <type>xsd:string</type>
+    <isRequired>false</isRequired>
+    <constraint/>
+    <description>Credential name for HTTP receiver authentication</description>
+    <additionalMetadata/>
+  </parameter>
+  <parameter>
+    <key/>
+    <name>HTTP_Receiver_ProxyType</name>
+    <type>xsd:string</type>
+    <isRequired>false</isRequired>
+    <constraint/>
+    <description>Proxy type for HTTP receiver connection</description>
+    <additionalMetadata>
+      <isCombobox>true</isCombobox>
+    </additionalMetadata>
+  </parameter>
+  <parameter>
+    <key/>
+    <name>HTTP_Receiver_Timeout</name>
+    <type>xsd:integer</type>
+    <isRequired>false</isRequired>
+    <constraint/>
+    <description>HTTP request timeout in milliseconds</description>
+    <additionalMetadata/>
+  </parameter>
+{% include "script_parameters.propdef.j2" %}
+  {% if error_handling_enabled %}
+  <parameter>
+    <key/>
+    <name>ProcessDirect_Address</name>
+    <type>xsd:string</type>
+    <isRequired>false</isRequired>
+    <constraint/>
+    <description>ProcessDirect address for the error handling utility iFlow</description>
+    <additionalMetadata/>
+  </parameter>
+  {% endif %}
+  <param_references>
+    <reference attribute_category="SOAP" attribute_id="ctype::AdapterVariant/cname::sap:SOAP/tp::HTTPS/mp::SOAP 1.x/direction::Sender/version::{{ adapter_versions.SOAP }}/attrId::httpAddressWithoutQuery" attribute_uilabel="Address" param_key="SOAP_Sender_Address"/>
+    <reference attribute_category="SOAP" attribute_id="ctype::AdapterVariant/cname::sap:SOAP/tp::HTTPS/mp::SOAP 1.x/direction::Sender/version::{{ adapter_versions.SOAP }}/attrId::WSDLAddress" attribute_uilabel="URL to WSDL" param_key="SOAP_Sender_WSDLUrl"/>
+    <reference attribute_category="SOAP" attribute_id="ctype::AdapterVariant/cname::sap:SOAP/tp::HTTPS/mp::SOAP 1.x/direction::Sender/version::{{ adapter_versions.SOAP }}/attrId::senderAuthType" attribute_uilabel="Authorization" param_key="SOAP_Sender_AuthType"/>
+    <reference attribute_category="HTTP" attribute_id="ctype::AdapterVariant/cname::HTTP/tp::HTTP/mp::None/direction::Receiver/version::{{ adapter_versions.HTTP }}/attrId::httpAddressWithoutQuery" attribute_uilabel="Address" param_key="HTTP_Receiver_Address"/>
+    <reference attribute_category="HTTP" attribute_id="ctype::AdapterVariant/cname::HTTP/tp::HTTP/mp::None/direction::Receiver/version::{{ adapter_versions.HTTP }}/attrId::httpAddressQuery" attribute_uilabel="Query" param_key="HTTP_Receiver_Query"/>
+    <reference attribute_category="HTTP" attribute_id="ctype::AdapterVariant/cname::HTTP/tp::HTTP/mp::None/direction::Receiver/version::{{ adapter_versions.HTTP }}/attrId::httpMethod" attribute_uilabel="HTTP Method" param_key="HTTP_Receiver_Method"/>
+    <reference attribute_category="HTTP" attribute_id="ctype::AdapterVariant/cname::HTTP/tp::HTTP/mp::None/direction::Receiver/version::{{ adapter_versions.HTTP }}/attrId::authenticationMethod" attribute_uilabel="Authentication" param_key="HTTP_Receiver_AuthMethod"/>
+    <reference attribute_category="HTTP" attribute_id="ctype::AdapterVariant/cname::HTTP/tp::HTTP/mp::None/direction::Receiver/version::{{ adapter_versions.HTTP }}/attrId::credentialName" attribute_uilabel="Credential Name" param_key="HTTP_Receiver_CredentialName"/>
+    <reference attribute_category="HTTP" attribute_id="ctype::AdapterVariant/cname::HTTP/tp::HTTP/mp::None/direction::Receiver/version::{{ adapter_versions.HTTP }}/attrId::proxyType" attribute_uilabel="Proxy Type" param_key="HTTP_Receiver_ProxyType"/>
+    <reference attribute_category="HTTP" attribute_id="ctype::AdapterVariant/cname::HTTP/tp::HTTP/mp::None/direction::Receiver/version::{{ adapter_versions.HTTP }}/attrId::httpRequestTimeout" attribute_uilabel="Timeout (in ms)" param_key="HTTP_Receiver_Timeout"/>
+    {% if error_handling_enabled %}
+    <reference attribute_category="CI" attribute_id="ctype::Adapter/cname::ProcessDirect/vendor::SAP/version::{{ adapter_versions.PROCESSDIRECT }}/attrId::address" attribute_uilabel="Address" param_key="ProcessDirect_Address"/>
+    {% endif %}
+  </param_references>
+</parameters>

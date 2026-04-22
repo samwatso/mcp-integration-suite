@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<parameters>
+  <parameter>
+    <key/>
+    <name>receiverHost</name>
+    <type>xsd:string</type>
+    <isRequired>false</isRequired>
+    <constraint/>
+    <description>Target system host URL (without query string)</description>
+    <additionalMetadata/>
+  </parameter>
+  <parameter>
+    <key/>
+    <name>receiverQuery</name>
+    <type>xsd:string</type>
+    <isRequired>false</isRequired>
+    <constraint/>
+    <description>Query string appended to the receiver URL</description>
+    <additionalMetadata/>
+  </parameter>
+  <parameter>
+    <key/>
+    <name>receiverAuth</name>
+    <type>xsd:string</type>
+    <isRequired>false</isRequired>
+    <constraint/>
+    <description>Credential name for receiver authentication</description>
+    <additionalMetadata/>
+  </parameter>
+  <parameter>
+    <key/>
+    <name>sender_address</name>
+    <type>xsd:string</type>
+    <isRequired>false</isRequired>
+    <constraint/>
+    <description>Sender endpoint address path</description>
+    <additionalMetadata/>
+  </parameter>
+  <parameter>
+    <key/>
+    <name>senderAuthType</name>
+    <type>xsd:string</type>
+    <isRequired>false</isRequired>
+    <constraint/>
+    <description>Authentication type for the sender endpoint</description>
+    <additionalMetadata>
+      <isCombobox>true</isCombobox>
+    </additionalMetadata>
+  </parameter>
+  <parameter>
+    <key/>
+    <name>senderMaxBodySize</name>
+    <type>xsd:integer</type>
+    <isRequired>false</isRequired>
+    <constraint/>
+    <description>Maximum body size in MB for sender endpoint</description>
+    <additionalMetadata/>
+  </parameter>
+  <parameter>
+    <key/>
+    <name>receiverMethod</name>
+    <type>xsd:string</type>
+    <isRequired>false</isRequired>
+    <constraint/>
+    <description>HTTP method for receiver call</description>
+    <additionalMetadata>
+      <isCombobox>true</isCombobox>
+    </additionalMetadata>
+  </parameter>
+  <parameter>
+    <key/>
+    <name>receiverAuthMethod</name>
+    <type>xsd:string</type>
+    <isRequired>false</isRequired>
+    <constraint/>
+    <description>Authentication method for HTTP receiver</description>
+    <additionalMetadata>
+      <isCombobox>true</isCombobox>
+    </additionalMetadata>
+  </parameter>
+  <parameter>
+    <key/>
+    <name>receiverProxyType</name>
+    <type>xsd:string</type>
+    <isRequired>false</isRequired>
+    <constraint/>
+    <description>Proxy type for receiver connection</description>
+    <additionalMetadata>
+      <isCombobox>true</isCombobox>
+    </additionalMetadata>
+  </parameter>
+  <parameter>
+    <key/>
+    <name>receiverTimeout</name>
+    <type>xsd:integer</type>
+    <isRequired>false</isRequired>
+    <constraint/>
+    <description>HTTP request timeout in milliseconds</description>
+    <additionalMetadata/>
+  </parameter>
+  {% if error_handling_enabled %}
+  <parameter>
+    <key/>
+    <name>ProcessDirect_Address</name>
+    <type>xsd:string</type>
+    <isRequired>false</isRequired>
+    <constraint/>
+    <description>ProcessDirect address for the error handling utility iFlow</description>
+    <additionalMetadata/>
+  </parameter>
+  {% endif %}
+  <param_references>
+    <reference attribute_category="HTTPS" attribute_id="ctype::AdapterVariant/cname::sap:HTTPS/tp::HTTPS/mp::None/direction::Sender/version::{{ adapter_versions.HTTPS }}/attrId::urlPath" attribute_uilabel="Address" param_key="sender_address"/>
+    <reference attribute_category="HTTPS" attribute_id="ctype::AdapterVariant/cname::sap:HTTPS/tp::HTTPS/mp::None/direction::Sender/version::{{ adapter_versions.HTTPS }}/attrId::senderAuthType" attribute_uilabel="Authorization" param_key="senderAuthType"/>
+    <reference attribute_category="HTTPS" attribute_id="ctype::AdapterVariant/cname::sap:HTTPS/tp::HTTPS/mp::None/direction::Sender/version::{{ adapter_versions.HTTPS }}/attrId::maximumBodySize" attribute_uilabel="Maximum Body Size (in MB)" param_key="senderMaxBodySize"/>
+    <reference attribute_category="HTTP" attribute_id="ctype::AdapterVariant/cname::HTTP/tp::HTTP/mp::None/direction::Receiver/version::{{ adapter_versions.HTTP }}/attrId::httpAddressWithoutQuery" attribute_uilabel="Address" param_key="receiverHost"/>
+    <reference attribute_category="HTTP" attribute_id="ctype::AdapterVariant/cname::HTTP/tp::HTTP/mp::None/direction::Receiver/version::{{ adapter_versions.HTTP }}/attrId::httpAddressQuery" attribute_uilabel="Query" param_key="receiverQuery"/>
+    <reference attribute_category="HTTP" attribute_id="ctype::AdapterVariant/cname::HTTP/tp::HTTP/mp::None/direction::Receiver/version::{{ adapter_versions.HTTP }}/attrId::httpMethod" attribute_uilabel="HTTP Method" param_key="receiverMethod"/>
+    <reference attribute_category="HTTP" attribute_id="ctype::AdapterVariant/cname::HTTP/tp::HTTP/mp::None/direction::Receiver/version::{{ adapter_versions.HTTP }}/attrId::authenticationMethod" attribute_uilabel="Authentication" param_key="receiverAuthMethod"/>
+    <reference attribute_category="HTTP" attribute_id="ctype::AdapterVariant/cname::HTTP/tp::HTTP/mp::None/direction::Receiver/version::{{ adapter_versions.HTTP }}/attrId::credentialName" attribute_uilabel="Credential Name" param_key="receiverAuth"/>
+    <reference attribute_category="HTTP" attribute_id="ctype::AdapterVariant/cname::HTTP/tp::HTTP/mp::None/direction::Receiver/version::{{ adapter_versions.HTTP }}/attrId::proxyType" attribute_uilabel="Proxy Type" param_key="receiverProxyType"/>
+    <reference attribute_category="HTTP" attribute_id="ctype::AdapterVariant/cname::HTTP/tp::HTTP/mp::None/direction::Receiver/version::{{ adapter_versions.HTTP }}/attrId::httpRequestTimeout" attribute_uilabel="Timeout (in ms)" param_key="receiverTimeout"/>
+    {% if error_handling_enabled %}
+    <reference attribute_category="CI" attribute_id="ctype::Adapter/cname::ProcessDirect/vendor::SAP/version::{{ adapter_versions.PROCESSDIRECT }}/attrId::address" attribute_uilabel="Address" param_key="ProcessDirect_Address"/>
+    {% endif %}
+  </param_references>
+</parameters>

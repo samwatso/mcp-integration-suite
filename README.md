@@ -82,6 +82,8 @@ You can access the following tools:
    - `deploy-iflow` - Deploy an IFlow
    - `get-iflow-configurations` - Get all configurations of an IFlow
    - `get-all-iflows` - Get a list of all available IFlows in a Package
+   - `generate-iflow` - Generate a production-ready IFlow ZIP from a template pattern (returns base64 ZIP)
+   - `list-iflow-patterns` - List the patterns available to `generate-iflow`
 
 3. **Message Mapping Management**
    - `get-messagemapping` - Get data of a Message Mapping
@@ -148,7 +150,35 @@ When working with IFlows, you'll interact with these components:
 
 8. **For testing mappings**, use `create-mapping-testiflow` to create a test IFlow.
 
+9. **Generate before editing from scratch**. If the user wants a new IFlow for a common pattern (file-to-file, IDoc-to-SFTP, SOAP-to-REST, mail alert, or the CI Pipeline Step 07 outbound shape), prefer `generate-iflow` over `create-empty-iflow` + `update-iflow`. The generator emits a complete ZIP (iflow.iflw, parameters, MANIFEST.MF, Groovy scripts) with JAR-spec manifest formatting and CPI adapter versioning already handled. You can then either import the ZIP directly or extract its files and feed them into `update-iflow` on an existing IFlow.
+
 When you need help with any integration scenario, I'll guide you through these tools and help you create effective solutions following SAP Integration Suite best practices.
+
+## IFlow Generator
+
+The `generate-iflow` tool renders production-ready IFlow ZIPs from six built-in template patterns. Use `list-iflow-patterns` to see them:
+
+| Pattern | Use case |
+|---|---|
+| `generic-fallback` | Generic passthrough with optional mapping |
+| `async-file-to-file` | SFTP/file sender → SFTP/file receiver, async |
+| `async-idoc-to-sftp` | IDoc sender → SFTP/file receiver, async |
+| `sync-soap-to-rest` | SOAP sender → HTTP/REST receiver, sync |
+| `pd-generic-mail-alert` | ProcessDirect-invoked mail alert sub-flow |
+| `pipeline-step07-outbound` | SAP CI Pipeline framework Step 07 outbound |
+
+Pattern selection is automatic based on `sender_adapter` + `receiver_adapter` + `direction`, or pass `job_config.pattern_override` to force one.
+
+Key inputs:
+- `name` (required) — becomes the iflow_id after sanitization
+- `sender_adapter` / `receiver_adapter` — `HTTPS`, `HTTP`, `SOAP`, `IDOC`, `SFTP`, `AS2`, `RFC`, `MAIL`, `PROCESSDIRECT` (HTTPS is auto-coerced to HTTP on the receiver side)
+- `id_config` — channel addresses (SFTP host/dir, HTTP receiver URL, etc.)
+- `job_config.logging_enabled` — bundles PayloadLogger + legacy log scripts
+- `job_config.error_handling_enabled` — bundles error handling scripts (default true)
+- `job_config.cpi_version_profile` — `latest` or `compatible` for trial/older tenants
+- `job_config.adapter_version_overrides` — per-adapter version pins, e.g. `{ "SFTP": "1.14.0" }`
+
+Output is JSON including the ZIP as `zip_base64` plus metadata (pattern chosen, iflow_id, size).
 
 
 # SAP Trading Partner Management (TPM) Tools - Start Here

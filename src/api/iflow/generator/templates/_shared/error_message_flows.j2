@@ -1,0 +1,66 @@
+    <!-- Error Handler: ProcessDirect channel to shared alert iFlow -->
+    <bpmn2:messageFlow id="MessageFlow_Error" name="ProcessDirect"
+        sourceRef="ServiceTask_SendError" targetRef="Participant_ErrorPD">
+      <bpmn2:extensionElements>
+        <ifl:property>
+          <key>ComponentType</key>
+          <value>ProcessDirect</value>
+        </ifl:property>
+        <ifl:property>
+          <key>Description</key>
+          <value/>
+        </ifl:property>
+        <ifl:property>
+          <key>address</key>
+          <value>{% raw %}{{ProcessDirect_Address}}{% endraw %}</value>
+        </ifl:property>
+        <ifl:property>
+          <key>ComponentNS</key>
+          <value>ProcessDirect</value>
+        </ifl:property>
+        <ifl:property>
+          <key>componentVersion</key>
+          <value>1.1</value>
+        </ifl:property>
+        <ifl:property>
+          <key>Name</key>
+          <value>ProcessDirect</value>
+        </ifl:property>
+        <ifl:property>
+          <key>TransportProtocolVersion</key>
+          <value>{{ adapter_versions.PROCESSDIRECT }}</value>
+        </ifl:property>
+        <ifl:property>
+          <key>ComponentSWCVName</key>
+          <value>external</value>
+        </ifl:property>
+        <ifl:property>
+          <key>system</key>
+          <value>ErrorAlertReceiver</value>
+        </ifl:property>
+        <ifl:property>
+          <key>TransportProtocol</key>
+          <value>Not Applicable</value>
+        </ifl:property>
+        <ifl:property>
+          <key>cmdVariantUri</key>
+          <value>ctype::AdapterVariant/cname::ProcessDirect/tp::Not Applicable/mp::Not Applicable/direction::Receiver/version::{{ adapter_versions.PROCESSDIRECT }}</value>
+        </ifl:property>
+        <ifl:property>
+          <key>MessageProtocol</key>
+          <value>Not Applicable</value>
+        </ifl:property>
+        <ifl:property>
+          <key>MessageProtocolVersion</key>
+          <value>{{ adapter_versions.PROCESSDIRECT }}</value>
+        </ifl:property>
+        <ifl:property>
+          <key>ComponentSWCVId</key>
+          <value>{{ adapter_versions.PROCESSDIRECT }}</value>
+        </ifl:property>
+        <ifl:property>
+          <key>direction</key>
+          <value>Receiver</value>
+        </ifl:property>
+      </bpmn2:extensionElements>
+    </bpmn2:messageFlow>

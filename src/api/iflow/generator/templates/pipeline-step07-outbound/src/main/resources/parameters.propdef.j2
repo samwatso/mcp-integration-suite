@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<parameters>
+  <parameter>
+    <key/>
+    <name>ProcessDirect_Address</name>
+    <type>xsd:string</type>
+    <isRequired>false</isRequired>
+    <constraint/>
+    <description>ProcessDirect sender address for the SAP CI Pipeline framework (Step 07)</description>
+    <additionalMetadata/>
+  </parameter>
+  <parameter>
+    <key/>
+    <name>receiverHost</name>
+    <type>xsd:string</type>
+    <isRequired>false</isRequired>
+    <constraint/>
+    <description>Target system host URL (without query string)</description>
+    <additionalMetadata/>
+  </parameter>
+  <parameter>
+    <key/>
+    <name>receiverQuery</name>
+    <type>xsd:string</type>
+    <isRequired>false</isRequired>
+    <constraint/>
+    <description>Query string appended to the receiver URL</description>
+    <additionalMetadata/>
+  </parameter>
+  <parameter>
+    <key/>
+    <name>receiverAuth</name>
+    <type>xsd:string</type>
+    <isRequired>false</isRequired>
+    <constraint/>
+    <description>Credential name for receiver authentication</description>
+    <additionalMetadata/>
+  </parameter>
+  <parameter>
+    <key/>
+    <name>receiverMethod</name>
+    <type>xsd:string</type>
+    <isRequired>false</isRequired>
+    <constraint/>
+    <description>HTTP method for receiver call</description>
+    <additionalMetadata>
+      <isCombobox>true</isCombobox>
+    </additionalMetadata>
+  </parameter>
+  <parameter>
+    <key/>
+    <name>receiverAuthMethod</name>
+    <type>xsd:string</type>
+    <isRequired>false</isRequired>
+    <constraint/>
+    <description>Authentication method for HTTP receiver</description>
+    <additionalMetadata>
+      <isCombobox>true</isCombobox>
+    </additionalMetadata>
+  </parameter>
+  <parameter>
+    <key/>
+    <name>receiverProxyType</name>
+    <type>xsd:string</type>
+    <isRequired>false</isRequired>
+    <constraint/>
+    <description>Proxy type for receiver connection</description>
+    <additionalMetadata>
+      <isCombobox>true</isCombobox>
+    </additionalMetadata>
+  </parameter>
+  <parameter>
+    <key/>
+    <name>receiverTimeout</name>
+    <type>xsd:integer</type>
+    <isRequired>false</isRequired>
+    <constraint/>
+    <description>HTTP request timeout in milliseconds</description>
+    <additionalMetadata/>
+  </parameter>
+  <param_references>
+    <reference attribute_category="CI" attribute_id="ctype::Adapter/cname::ProcessDirect/vendor::SAP/version::{{ adapter_versions.PROCESSDIRECT }}/attrId::address" attribute_uilabel="Address" param_key="ProcessDirect_Address"/>
+    <reference attribute_category="HTTP" attribute_id="ctype::AdapterVariant/cname::HTTP/tp::HTTP/mp::None/direction::Receiver/version::{{ adapter_versions.HTTP }}/attrId::httpAddressWithoutQuery" attribute_uilabel="Address" param_key="receiverHost"/>
+    <reference attribute_category="HTTP" attribute_id="ctype::AdapterVariant/cname::HTTP/tp::HTTP/mp::None/direction::Receiver/version::{{ adapter_versions.HTTP }}/attrId::httpAddressQuery" attribute_uilabel="Query" param_key="receiverQuery"/>
+    <reference attribute_category="HTTP" attribute_id="ctype::AdapterVariant/cname::HTTP/tp::HTTP/mp::None/direction::Receiver/version::{{ adapter_versions.HTTP }}/attrId::credentialName" attribute_uilabel="Credential Name" param_key="receiverAuth"/>
+    <reference attribute_category="HTTP" attribute_id="ctype::AdapterVariant/cname::HTTP/tp::HTTP/mp::None/direction::Receiver/version::{{ adapter_versions.HTTP }}/attrId::httpMethod" attribute_uilabel="HTTP Method" param_key="receiverMethod"/>
+    <reference attribute_category="HTTP" attribute_id="ctype::AdapterVariant/cname::HTTP/tp::HTTP/mp::None/direction::Receiver/version::{{ adapter_versions.HTTP }}/attrId::authenticationMethod" attribute_uilabel="Authentication" param_key="receiverAuthMethod"/>
+    <reference attribute_category="HTTP" attribute_id="ctype::AdapterVariant/cname::HTTP/tp::HTTP/mp::None/direction::Receiver/version::{{ adapter_versions.HTTP }}/attrId::proxyType" attribute_uilabel="Proxy Type" param_key="receiverProxyType"/>
+    <reference attribute_category="HTTP" attribute_id="ctype::AdapterVariant/cname::HTTP/tp::HTTP/mp::None/direction::Receiver/version::{{ adapter_versions.HTTP }}/attrId::httpRequestTimeout" attribute_uilabel="Timeout (in ms)" param_key="receiverTimeout"/>
+  </param_references>
+</parameters>

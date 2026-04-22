@@ -1,6 +1,7 @@
 
 import { registerPackageHandlers } from "./packages";
 import { registerIflowHandlers } from "./iflow/tools";
+import { registerIflowGeneratorHandlers } from "./iflow/generator";
 import { registerPackageDiscoverHandler } from "./discover/packages";
 import { registerIflowExampleHandler } from "./iflow/exmaples";
 import { registerMessageHandlers } from "./messages";
@@ -29,6 +30,7 @@ export const registerAllHandlers = (server: McpServerWithMiddleware) => {
 	registerDefaultMiddleware(server);
 	registerPackageHandlers(server);
 	registerIflowHandlers(server);
+	registerIflowGeneratorHandlers(server);
 	registerPackageDiscoverHandler(server);
 	registerIflowExampleHandler(server);
 	registerMessageHandlers(server);

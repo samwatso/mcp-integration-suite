@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<parameters>
+  <parameter>
+    <key/>
+    <name>ProcessDirect_Address</name>
+    <type>xsd:string</type>
+    <isRequired>false</isRequired>
+    <constraint/>
+    <description/>
+    <additionalMetadata/>
+  </parameter>
+  <parameter>
+    <key/>
+    <name>EmailTo</name>
+    <type>xsd:string</type>
+    <isRequired>false</isRequired>
+    <constraint/>
+    <description/>
+    <additionalMetadata/>
+  </parameter>
+  <parameter>
+    <key/>
+    <name>Email_From</name>
+    <type>xsd:string</type>
+    <isRequired>false</isRequired>
+    <constraint/>
+    <description/>
+    <additionalMetadata/>
+  </parameter>
+  <parameter>
+    <key/>
+    <name>EmailcC</name>
+    <type>xsd:string</type>
+    <isRequired>false</isRequired>
+    <constraint/>
+    <description/>
+    <additionalMetadata/>
+  </parameter>
+  <parameter>
+    <key/>
+    <name>EmailSubject</name>
+    <type>xsd:string</type>
+    <isRequired>false</isRequired>
+    <constraint/>
+    <description/>
+    <additionalMetadata/>
+  </parameter>
+  <parameter>
+    <key/>
+    <name>EmailBody</name>
+    <type>xsd:string</type>
+    <isRequired>false</isRequired>
+    <constraint/>
+    <description/>
+    <additionalMetadata/>
+  </parameter>
+  <parameter>
+    <key/>
+    <name>EmailBodyMimeType</name>
+    <type>xsd:string</type>
+    <isRequired>false</isRequired>
+    <constraint/>
+    <description/>
+    <additionalMetadata>
+      <isCombobox>true</isCombobox>
+    </additionalMetadata>
+  </parameter>
+  <parameter>
+    <key/>
+    <name>EmailBodyEncoding</name>
+    <type>xsd:string</type>
+    <isRequired>false</isRequired>
+    <constraint/>
+    <description/>
+    <additionalMetadata>
+      <isCombobox>true</isCombobox>
+    </additionalMetadata>
+  </parameter>
+  <parameter>
+    <key/>
+    <name>EmailSignatureEncryptionType</name>
+    <type>xsd:string</type>
+    <isRequired>false</isRequired>
+    <constraint/>
+    <description/>
+    <additionalMetadata>
+      <isCombobox>true</isCombobox>
+    </additionalMetadata>
+  </parameter>
+  <parameter>
+    <key/>
+    <name>Mail_SMTP_Address</name>
+    <type>xsd:string</type>
+    <isRequired>false</isRequired>
+    <constraint/>
+    <description/>
+    <additionalMetadata/>
+  </parameter>
+  <parameter>
+    <key/>
+    <name>Mail_Authentication</name>
+    <type>xsd:string</type>
+    <isRequired>false</isRequired>
+    <constraint/>
+    <description/>
+    <additionalMetadata>
+      <isCombobox>true</isCombobox>
+    </additionalMetadata>
+  </parameter>
+  <parameter>
+    <key/>
+    <name>Mail_CredentialName</name>
+    <type>xsd:string</type>
+    <isRequired>false</isRequired>
+    <constraint/>
+    <description/>
+    <additionalMetadata/>
+  </parameter>
+  <parameter>
+    <key/>
+    <name>Mail_Creds</name>
+    <type>xsd:string</type>
+    <isRequired>false</isRequired>
+    <constraint/>
+    <description/>
+    <additionalMetadata/>
+  </parameter>
+  <parameter>
+    <key/>
+    <name>Mail_Protection</name>
+    <type>xsd:string</type>
+    <isRequired>false</isRequired>
+    <constraint/>
+    <description/>
+    <additionalMetadata>
+      <isCombobox>true</isCombobox>
+    </additionalMetadata>
+  </parameter>
+  <parameter>
+    <key/>
+    <name>Mail_ProxyType</name>
+    <type>xsd:string</type>
+    <isRequired>false</isRequired>
+    <constraint/>
+    <description/>
+    <additionalMetadata>
+      <isCombobox>true</isCombobox>
+    </additionalMetadata>
+  </parameter>
+  <parameter>
+    <key/>
+    <name>timeout</name>
+    <type>xsd:integer</type>
+    <isRequired>false</isRequired>
+    <constraint/>
+    <description/>
+    <additionalMetadata/>
+  </parameter>
+  <param_references>
+    <reference attribute_category="CI" attribute_id="ctype::Adapter/cname::ProcessDirect/vendor::SAP/version::1.1.2/attrId::address" attribute_uilabel="Address" param_key="ProcessDirect_Address"/>
+    <reference attribute_category="MAIL" attribute_id="ctype::AdapterVariant/cname::Mail/tp::SMTP/mp::None/direction::Receiver/version::1.9.1/attrId::to" attribute_uilabel="To" param_key="EmailTo"/>
+    <reference attribute_category="MAIL" attribute_id="ctype::AdapterVariant/cname::Mail/tp::SMTP/mp::None/direction::Receiver/version::1.9.1/attrId::from" attribute_uilabel="From" param_key="Email_From"/>
+    <reference attribute_category="MAIL" attribute_id="ctype::AdapterVariant/cname::Mail/tp::SMTP/mp::None/direction::Receiver/version::1.9.1/attrId::cc" attribute_uilabel="Cc" param_key="EmailcC"/>
+    <reference attribute_category="MAIL" attribute_id="ctype::AdapterVariant/cname::Mail/tp::SMTP/mp::None/direction::Receiver/version::1.9.1/attrId::subject" attribute_uilabel="Subject" param_key="EmailSubject"/>
+    <reference attribute_category="MAIL" attribute_id="ctype::AdapterVariant/cname::Mail/tp::SMTP/mp::None/direction::Receiver/version::1.9.1/attrId::body" attribute_uilabel="Mail Body" param_key="EmailBody"/>
+    <reference attribute_category="MAIL" attribute_id="ctype::AdapterVariant/cname::Mail/tp::SMTP/mp::None/direction::Receiver/version::1.9.1/attrId::content_type" attribute_uilabel="Body Mime-Type" param_key="EmailBodyMimeType"/>
+    <reference attribute_category="MAIL" attribute_id="ctype::AdapterVariant/cname::Mail/tp::SMTP/mp::None/direction::Receiver/version::1.9.1/attrId::content_encoding" attribute_uilabel="Body Encoding" param_key="EmailBodyEncoding"/>
+    <reference attribute_category="MAIL" attribute_id="ctype::AdapterVariant/cname::Mail/tp::SMTP/mp::None/direction::Receiver/version::1.9.1/attrId::encrypt.type" attribute_uilabel="Signature and Encryption Type" param_key="EmailSignatureEncryptionType"/>
+    <reference attribute_category="MAIL" attribute_id="ctype::AdapterVariant/cname::Mail/tp::SMTP/mp::None/direction::Receiver/version::1.9.1/attrId::server" attribute_uilabel="Address" param_key="Mail_SMTP_Address"/>
+    <reference attribute_category="MAIL" attribute_id="ctype::AdapterVariant/cname::Mail/tp::SMTP/mp::None/direction::Receiver/version::1.9.1/attrId::auth" attribute_uilabel="Authentication" param_key="Mail_Authentication"/>
+    <reference attribute_category="MAIL" attribute_id="ctype::AdapterVariant/cname::Mail/tp::SMTP/mp::None/direction::Receiver/version::1.9.1/attrId::tokenCredential" attribute_uilabel="Credential Name" param_key="Mail_CredentialName"/>
+    <reference attribute_category="MAIL" attribute_id="ctype::AdapterVariant/cname::Mail/tp::SMTP/mp::None/direction::Receiver/version::1.9.1/attrId::user" attribute_uilabel="Credential Name" param_key="Mail_Creds"/>
+    <reference attribute_category="MAIL" attribute_id="ctype::AdapterVariant/cname::Mail/tp::SMTP/mp::None/direction::Receiver/version::1.9.1/attrId::ssl" attribute_uilabel="Protection" param_key="Mail_Protection"/>
+    <reference attribute_category="MAIL" attribute_id="ctype::AdapterVariant/cname::Mail/tp::SMTP/mp::None/direction::Receiver/version::1.9.1/attrId::proxyType" attribute_uilabel="Proxy Type" param_key="Mail_ProxyType"/>
+    <reference attribute_category="MAIL" attribute_id="ctype::AdapterVariant/cname::Mail/tp::SMTP/mp::None/direction::Receiver/version::1.9.1/attrId::timeout" attribute_uilabel="Timeout (in ms)" param_key="timeout"/>
+  </param_references>
+</parameters>

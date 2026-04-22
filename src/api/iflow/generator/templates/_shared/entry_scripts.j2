@@ -1,0 +1,65 @@
+{% if entry_scripts_enabled %}
+    {# === Sashay Script Library: Entry-point scripts ===
+       Include at the start of the integration process.
+       SizeGuard and ReplaySnapshot are self-gating via externalized parameters
+       (EnableSizeGuard, EnableReplaySnapshot) — they no-op when disabled. #}
+
+    <!-- Groovy: Reject oversized payloads early (gated by EnableSizeGuard param) -->
+    <bpmn2:callActivity id="CallActivity_SizeGuard" name="Size Guard">
+      <bpmn2:extensionElements>
+        <ifl:property>
+          <key>activityType</key>
+          <value>Script</value>
+        </ifl:property>
+        <ifl:property>
+          <key>scriptBundleId</key>
+          <value>PayloadSizeGuard</value>
+        </ifl:property>
+        <ifl:property>
+          <key>scriptFunction</key>
+          <value>processData</value>
+        </ifl:property>
+        <ifl:property>
+          <key>scriptType</key>
+          <value>groovy</value>
+        </ifl:property>
+        <ifl:property>
+          <key>cmdVariantUri</key>
+          <value>ctype::FlowstepVariant/cname::GroovyScript/version::1.0.1</value>
+        </ifl:property>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>SequenceFlow_StartToSizeGuard</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_SizeGuardToReplay</bpmn2:outgoing>
+    </bpmn2:callActivity>
+
+    <!-- Groovy: Capture full message context for replay (gated by EnableReplaySnapshot param) -->
+    <bpmn2:callActivity id="CallActivity_ReplaySnapshot" name="Replay Snapshot">
+      <bpmn2:extensionElements>
+        <ifl:property>
+          <key>activityType</key>
+          <value>Script</value>
+        </ifl:property>
+        <ifl:property>
+          <key>scriptBundleId</key>
+          <value>ReplaySnapshot</value>
+        </ifl:property>
+        <ifl:property>
+          <key>scriptFunction</key>
+          <value>processData</value>
+        </ifl:property>
+        <ifl:property>
+          <key>scriptType</key>
+          <value>groovy</value>
+        </ifl:property>
+        <ifl:property>
+          <key>cmdVariantUri</key>
+          <value>ctype::FlowstepVariant/cname::GroovyScript/version::1.0.1</value>
+        </ifl:property>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>SequenceFlow_SizeGuardToReplay</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_ReplayOut</bpmn2:outgoing>
+    </bpmn2:callActivity>
+
+    <bpmn2:sequenceFlow id="SequenceFlow_StartToSizeGuard" sourceRef="{{ entry_scripts_source | default('StartEvent_1') }}" targetRef="CallActivity_SizeGuard" />
+    <bpmn2:sequenceFlow id="SequenceFlow_SizeGuardToReplay" sourceRef="CallActivity_SizeGuard" targetRef="CallActivity_ReplaySnapshot" />
+{% endif %}
